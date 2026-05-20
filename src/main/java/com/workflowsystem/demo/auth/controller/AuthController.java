@@ -3,6 +3,8 @@ package com.workflowsystem.demo.auth.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.workflowsystem.demo.auth.dto.LoginRequest;
+import com.workflowsystem.demo.auth.dto.LoginResponse;
 import com.workflowsystem.demo.auth.dto.RegisterRequest;
 import com.workflowsystem.demo.auth.dto.UserResponse;
 import com.workflowsystem.demo.auth.service.AuthService;
@@ -29,6 +31,17 @@ public class AuthController {
             true,
             "User registered successfully",
             userResponse
+        );
+    }
+
+    @PostMapping("/login")
+    public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        LoginResponse loginResponse = authService.login(request);
+        
+        return new ApiResponse<>(
+            true,
+            "Login successful",
+            loginResponse
         );
     }
 }
