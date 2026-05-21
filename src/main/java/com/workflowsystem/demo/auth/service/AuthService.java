@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 
 import com.workflowsystem.demo.auth.dto.LoginRequest;
 import com.workflowsystem.demo.auth.dto.LoginResponse;
+import com.workflowsystem.demo.auth.dto.RefreshTokenRequest;
 import com.workflowsystem.demo.auth.dto.RegisterRequest;
 import com.workflowsystem.demo.auth.dto.UserResponse;
+import com.workflowsystem.demo.auth.entity.RefreshToken;
 import com.workflowsystem.demo.auth.entity.Role;
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.mapper.UserMapper;
@@ -19,13 +21,15 @@ import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 @Service
 public class AuthService {
     private final UserRepository userRepository;
-     private final PasswordEncoder passwordEncoder;
-     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenService refreshTokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.refreshTokenService = refreshTokenService;
     }
 
     public UserResponse register (RegisterRequest request) {
@@ -59,10 +63,42 @@ public class AuthService {
             throw new AuthenticationException("Invalid credentials");
         }
 
-        String token = jwtService.generateToken(user.getEmail());
+        String accessToken = jwtService.generateToken(user.getEmail());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
-        return new LoginResponse(user.getId(), user.getUsername(), user.getEmail(), token);
+        return new LoginResponse(
+                user.getId(), 
+                user.getUsername(), 
+                user.getEmail(), 
+                accessToken, 
+                refreshToken.getToken()
+            );
 
     }
+
+    public LoginResponse refreshToken(RefreshTokenRequest request){
+        RefreshToken refreshToken = refreshTokenService.findByToken(request.getRefreshToken())
+                                    .orElseThrow(()->
+                                        new AuthenticationException("Invalid Refresh token")
+                                    );
+
+        if(refreshTokenService.isExpired(refreshToken)){
+            throw new AuthenticationException("Refresh toke expired");
+        }
+
+        User user = refreshToken.getUser();
+
+        String newAccessToken = jwtService.generateToken(user.getEmail());
+
+        return new LoginResponse(
+            user.getId(),
+            user.getUsername(),
+            user.getEmail(),
+            newAccessToken,
+            refreshToken.getToken()
+        );
+    }
+
+
 
 }

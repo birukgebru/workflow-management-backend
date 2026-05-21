@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.workflowsystem.demo.auth.dto.LoginRequest;
 import com.workflowsystem.demo.auth.dto.LoginResponse;
+import com.workflowsystem.demo.auth.dto.RefreshTokenRequest;
 import com.workflowsystem.demo.auth.dto.RegisterRequest;
 import com.workflowsystem.demo.auth.dto.UserResponse;
 import com.workflowsystem.demo.auth.service.AuthService;
@@ -12,6 +13,9 @@ import com.workflowsystem.demo.shared.response.ApiResponse;
 import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -41,6 +45,17 @@ public class AuthController {
         return new ApiResponse<>(
             true,
             "Login successful",
+            loginResponse
+        );
+    }
+
+    @PostMapping("/refresh")
+    public ApiResponse<LoginResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request){
+        LoginResponse loginResponse = authService.refreshToken(request);
+
+        return new ApiResponse<>(
+            true,
+            "Token refreshed successfully",
             loginResponse
         );
     }
