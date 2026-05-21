@@ -2,6 +2,8 @@ package com.workflowsystem.demo.auth.security;
 
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
@@ -25,12 +27,15 @@ public class CustomUserDetailsService implements UserDetailsService{
         User user = userRepository.findByEmail(email)
                     .orElseThrow(()-> new UsernameNotFoundException("User not found"));
 
+        List<SimpleGrantedAuthority> authorities = user.getRoles().stream().map(
+            role -> new SimpleGrantedAuthority(role.name())).collect(Collectors.toList());
+
+        
+
         return new org.springframework.security.core.userdetails.User(
             user.getEmail(),
             user.getPassword(),
-            Collections.singleton(
-                new SimpleGrantedAuthority("ROLE_USER")
-            )
+            authorities
         );
     }
 }

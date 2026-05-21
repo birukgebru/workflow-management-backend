@@ -8,6 +8,7 @@ import com.workflowsystem.demo.auth.dto.LoginRequest;
 import com.workflowsystem.demo.auth.dto.LoginResponse;
 import com.workflowsystem.demo.auth.dto.RegisterRequest;
 import com.workflowsystem.demo.auth.dto.UserResponse;
+import com.workflowsystem.demo.auth.entity.Role;
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.mapper.UserMapper;
 import com.workflowsystem.demo.auth.repository.UserRepository;
@@ -42,6 +43,7 @@ public class AuthService {
         user.setPassword(
             passwordEncoder.encode(request.getPassword())
         );
+        user.getRoles().add(Role.ROLE_USER);
 
         User savedUser = userRepository.save(user);
         return UserMapper.toUserResponse(savedUser);
