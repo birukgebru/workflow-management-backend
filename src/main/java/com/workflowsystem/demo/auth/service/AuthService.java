@@ -11,6 +11,7 @@ import com.workflowsystem.demo.auth.dto.UserResponse;
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.mapper.UserMapper;
 import com.workflowsystem.demo.auth.repository.UserRepository;
+import com.workflowsystem.demo.auth.security.JwtService;
 import com.workflowsystem.demo.shared.exception.AuthenticationException;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 
@@ -18,10 +19,12 @@ import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 public class AuthService {
     private final UserRepository userRepository;
      private final PasswordEncoder passwordEncoder;
+     private final JwtService jwtService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public UserResponse register (RegisterRequest request) {
@@ -54,7 +57,9 @@ public class AuthService {
             throw new AuthenticationException("Invalid credentials");
         }
 
-        return new LoginResponse(user.getId(), user.getUsername(), user.getEmail());
+        String token = jwtService.generateToken(user.getEmail());
+
+        return new LoginResponse(user.getId(), user.getUsername(), user.getEmail(), token);
 
     }
 
