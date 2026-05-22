@@ -1,4 +1,4 @@
-package com.workflowsystem.demo.auth.entity;
+package com.workflowsystem.demo.auth.enums;
 
 public enum Role {
     ROLE_USER,

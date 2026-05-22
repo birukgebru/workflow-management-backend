@@ -3,6 +3,8 @@ package com.workflowsystem.demo.auth.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.workflowsystem.demo.auth.enums.Role;
+
 import jakarta.persistence.*;
 
 @Entity
