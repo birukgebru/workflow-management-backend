@@ -1,5 +1,7 @@
 package com.workflowsystem.demo.workflow.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,5 +32,23 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflowRequest.setStatus(WorkflowStatus.PENDING);
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
         return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<WorkflowResponse> getMyRequests(User currentUser){
+        return workflowRequestRepository.findBySubmittedByOrderByCreatedAtDesc(currentUser)
+                .stream()
+                .map(WorkflowRequestMapper::toWorkflowResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<WorkflowResponse> getRequestsByStatus(WorkflowStatus status){
+        return workflowRequestRepository.findByStatusOrderByCreatedAtDesc(status)
+                .stream()
+                .map(WorkflowRequestMapper::toWorkflowResponse)
+                .toList();
     }
 }
