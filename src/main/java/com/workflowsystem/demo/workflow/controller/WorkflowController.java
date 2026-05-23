@@ -4,24 +4,21 @@ import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.workflowsystem.demo.auth.entity.User;
+import com.workflowsystem.demo.auth.mapper.UserMapper;
 import com.workflowsystem.demo.auth.repository.UserRepository;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.shared.response.ApiResponse;
+import com.workflowsystem.demo.workflow.dto.WorkflowHistoryResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowSubmitRequest;
 import com.workflowsystem.demo.workflow.enums.WorkflowStatus;
+import com.workflowsystem.demo.workflow.repository.WorkflowHistoryRepository;
 import com.workflowsystem.demo.workflow.service.WorkflowService;
 
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -29,10 +26,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class WorkflowController {
     private final WorkflowService workflowService;
     private final UserRepository userRepository;
+    private final WorkflowHistoryRepository workflowHistoryRepository;
 
-    public WorkflowController(WorkflowService workflowService, UserRepository userRepository) {
+    public WorkflowController(WorkflowService workflowService, UserRepository userRepository, WorkflowHistoryRepository workflowHistoryRepository) {
         this.workflowService = workflowService;
         this.userRepository = userRepository;
+        this.workflowHistoryRepository = workflowHistoryRepository;
     }
 
     @PostMapping("/submit")
@@ -78,5 +77,26 @@ public class WorkflowController {
         );
     }
     
+    @GetMapping("/{id}/history")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ApiResponse<List<WorkflowHistoryResponse>> getWorkflowHistory(@PathVariable Long id) {
+        List<WorkflowHistoryResponse> workflowHistoryResponses = workflowHistoryRepository
+                .findByWorkflowRequestIdOrderByChangedAtAsc(id)
+                .stream()
+                .map(history -> new WorkflowHistoryResponse(
+                        history.getAction(),
+                        history.getPreviousStatus(),
+                        history.getNewStatus(),
+                        history.getChangedBy() == null ? null : UserMapper.toUserResponse(history.getChangedBy()),
+                        history.getChangedAt()
+                ))
+                .toList();
 
+        return new ApiResponse<>(
+            true,
+            "Workflow history",
+            workflowHistoryResponses
+        );
+    }
+    
 }
