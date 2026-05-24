@@ -1,13 +1,16 @@
 package com.workflowsystem.demo.workflow.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.workflowsystem.demo.audit.entitiy.AuditLog;
 import com.workflowsystem.demo.audit.repository.AuditLogRepository;
 import com.workflowsystem.demo.auth.entity.User;
+import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowSubmitRequest;
 import com.workflowsystem.demo.workflow.entity.WorkflowHistory;
@@ -46,7 +49,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
         logWorkflowHistory(
             savedWorkflowRequest,
-            savedWorkflowRequest.getStatus(),
+            null,
             savedWorkflowRequest.getStatus(),
             WorkflowAction.SUBMITTED,
             savedWorkflowRequest.getSubmittedBy()
@@ -79,6 +82,110 @@ public class WorkflowServiceImpl implements WorkflowService {
                 .stream()
                 .map(WorkflowRequestMapper::toWorkflowResponse)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public WorkflowResponse reviewRequest(@NonNull Long requestId, User currentUser) {
+        WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
+
+        WorkflowStatus previousStatus = workflowRequest.getStatus();
+        if (previousStatus != WorkflowStatus.PENDING) {
+            throw new IllegalStateException("Only pending workflow requests can be reviewed");
+        }
+
+        workflowRequest.setStatus(WorkflowStatus.UNDER_REVIEW);
+        workflowRequest.setReviewedBy(currentUser);
+        workflowRequest.setReviewedAt(LocalDateTime.now());
+
+        WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
+
+        logWorkflowHistory(
+                savedWorkflowRequest,
+                previousStatus,
+                savedWorkflowRequest.getStatus(),
+                WorkflowAction.REVIEWED,
+                currentUser
+        );
+
+        logAudit(
+                "REVIEWED",
+                "WorkflowRequest",
+                savedWorkflowRequest.getId(),
+                currentUser,
+                "Workflow request marked under review"
+        );
+
+        return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
+    }
+
+    @Override
+    @Transactional
+    public WorkflowResponse approveRequest(@NonNull Long requestId, User currentUser) {
+        WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
+        WorkflowStatus previousStatus = workflowRequest.getStatus();
+        if (previousStatus != WorkflowStatus.UNDER_REVIEW) {
+            throw new IllegalStateException("Only workflow requests under review can be approved"); 
+        }
+
+        workflowRequest.setStatus(WorkflowStatus.APPROVED);
+        workflowRequest.setApprovedBy(currentUser);
+        workflowRequest.setApprovedAt(LocalDateTime.now());
+        WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
+
+        logWorkflowHistory(
+                savedWorkflowRequest,
+                previousStatus,
+                savedWorkflowRequest.getStatus(),
+                WorkflowAction.APPROVED,
+                currentUser
+        );
+
+        logAudit(
+                "APPROVED",
+                "WorkflowRequest",
+                savedWorkflowRequest.getId(),
+                currentUser,
+                "Workflow request approved"
+        );
+
+        return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
+    }
+
+    @Override
+    @Transactional
+    public WorkflowResponse rejectRequest(@NonNull Long requestId, User currentUser) {
+        WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
+        WorkflowStatus previousStatus = workflowRequest.getStatus();
+        if (previousStatus != WorkflowStatus.UNDER_REVIEW) {
+            throw new IllegalStateException("Only workflow requests under review can be rejected");
+        }
+
+        workflowRequest.setStatus(WorkflowStatus.REJECTED);
+        workflowRequest.setRejectedBy(currentUser);
+        workflowRequest.setRejectedAt(LocalDateTime.now());
+        WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
+
+        logWorkflowHistory(
+                savedWorkflowRequest,
+                previousStatus,
+                savedWorkflowRequest.getStatus(),
+                WorkflowAction.REJECTED,
+                currentUser
+        );
+
+        logAudit(
+                "REJECTED",
+                "WorkflowRequest",
+                savedWorkflowRequest.getId(),
+                currentUser,
+                "Workflow request rejected"
+        );
+
+        return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
     }
 
     private void logWorkflowHistory(

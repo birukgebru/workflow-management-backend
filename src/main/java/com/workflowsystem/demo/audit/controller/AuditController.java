@@ -25,7 +25,7 @@ public class AuditController {
     }
 
     @GetMapping("/logs")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ApiResponse<List<AuditLogResponse>> getAuditLogs() {
         List<AuditLogResponse> auditLogs = auditLogRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
