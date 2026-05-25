@@ -8,7 +8,14 @@ import com.workflowsystem.demo.workflow.enums.WorkflowStatus;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "workflow_requests")
+@Table(
+    name = "workflow_requests",
+    indexes = {
+        @Index(name = "idx_workflow_requests_status", columnList = "status"),
+        @Index(name = "idx_workflow_requests_submitted_by_id", columnList = "submitted_by_id"),
+        @Index(name = "idx_workflow_requests_created_at", columnList = "created_at")
+    }
+)
 public class WorkflowRequest {
 
     @Id
@@ -44,7 +51,7 @@ public class WorkflowRequest {
     @Column(name = "rejected_at")
     private LocalDateTime rejectedAt;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
@@ -158,4 +165,5 @@ public class WorkflowRequest {
     public void setRejectedAt(LocalDateTime rejectedAt) {
         this.rejectedAt = rejectedAt;
     }
+
 }

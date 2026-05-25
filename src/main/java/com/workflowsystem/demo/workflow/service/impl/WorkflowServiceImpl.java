@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.workflowsystem.demo.audit.entitiy.AuditLog;
 import com.workflowsystem.demo.audit.repository.AuditLogRepository;
 import com.workflowsystem.demo.auth.entity.User;
+import com.workflowsystem.demo.shared.exception.InvalidWorkflowStateException;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowSubmitRequest;
@@ -92,7 +93,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
         WorkflowStatus previousStatus = workflowRequest.getStatus();
         if (previousStatus != WorkflowStatus.PENDING) {
-            throw new IllegalStateException("Only pending workflow requests can be reviewed");
+            throw new InvalidWorkflowStateException("Only pending requests can be reviewed");
         }
 
         workflowRequest.setStatus(WorkflowStatus.UNDER_REVIEW);
@@ -127,7 +128,7 @@ public class WorkflowServiceImpl implements WorkflowService {
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
         WorkflowStatus previousStatus = workflowRequest.getStatus();
         if (previousStatus != WorkflowStatus.UNDER_REVIEW) {
-            throw new IllegalStateException("Only workflow requests under review can be approved"); 
+            throw new InvalidWorkflowStateException("Only workflow requests under review can be approved");
         }
 
         workflowRequest.setStatus(WorkflowStatus.APPROVED);
