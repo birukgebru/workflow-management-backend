@@ -9,7 +9,13 @@ import com.workflowsystem.demo.workflow.enums.WorkflowStatus;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "workflow_histories")
+@Table(name = "workflow_histories",
+        indexes = {
+            @Index(name = "idx_history_workflow", columnList = "workflow_request_id"),
+            @Index(name = "idx_history_changed_at", columnList = "changed_at"),
+            @Index(name = "idx_history_changed_by", columnList = "changed_by_id")
+        }
+)
 public class WorkflowHistory {
 
     @Id

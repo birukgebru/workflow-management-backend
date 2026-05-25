@@ -13,7 +13,9 @@ import jakarta.persistence.*;
     indexes = {
         @Index(name = "idx_workflow_requests_status", columnList = "status"),
         @Index(name = "idx_workflow_requests_submitted_by_id", columnList = "submitted_by_id"),
-        @Index(name = "idx_workflow_requests_created_at", columnList = "created_at")
+        @Index(name = "idx_workflow_requests_created_at", columnList = "created_at"),
+        @Index(name = "idx_workflow_requests_approved_by_id", columnList = "approved_by_id"),
+        @Index(name = "idx_workflow_requests_reviewed_by_id", columnList = "reviewed_by_id")
     }
 )
 public class WorkflowRequest {
