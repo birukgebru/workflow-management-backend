@@ -1,49 +1,48 @@
-# Enterprise Workflow Management System
+# Workflow Management System
 
-Backend-driven workflow automation platform built with Spring Boot and PostgreSQL.
+Enterprise Workflow Management System is a backend-driven platform designed to manage approval workflows, role-based processing, audit tracking, and workflow lifecycle management.
 
-The system is designed to manage workflow requests, approvals, role-based processing, audit tracking, and secure API access using JWT authentication.
+The system demonstrates enterprise backend engineering concepts including JWT authentication, RBAC, workflow orchestration, audit logging, transactional integrity, and REST API documentation.
 
----
+## FEATURES
+Authentication
+- JWT authentication
+- Refresh token flow
+- Stateless security
+- Password hashing
 
-## Core Features
+Authorization
+- RBAC
+- Admin/Reviewer/Approver roles
 
-- JWT Authentication & Refresh Tokens
-- Role-Based Access Control (RBAC)
-- Workflow Submission & Approval Flow
-- Workflow History Tracking
-- Audit Logging
-- RESTful API Architecture
-- Swagger/OpenAPI Documentation
-- PostgreSQL Integration
-- Transaction-Safe Workflow Operations
+Workflow Engine
+- Submit workflow requests
+- Review/Approve/Reject requests
+- Workflow status tracking
 
----
+Auditability
+- Workflow history tracking
+- Audit logs
+- Action traceability
 
-## Tech Stack
+API
+- RESTful API
+- Swagger/OpenAPI documentation
 
-- Java 21
+## TECH STACK
+
+- Java 17
 - Spring Boot
 - Spring Security
 - Spring Data JPA
 - PostgreSQL
-- JWT
+- JWT Authentication
 - Swagger/OpenAPI
 - Maven
 - Docker
 
----
+## Architecture
 
-## Project Status
+The application follows layered modular monolith architecture (auth, workflow, audit, shared, config) each separated into controller, service, repository, dto, mapper, entity.
 
-Phase 1 foundation completed:
-
-- Authentication system
-- RBAC
-- Workflow engine
-- Workflow history
-- Audit logging
-- Swagger integration
-- Database integrity improvements
-
-Additional enterprise features and deployment improvements are planned in future phases.
+![Architecture Diagram](docs/images/architecture-diagram.png)
