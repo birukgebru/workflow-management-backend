@@ -19,11 +19,21 @@ import com.workflowsystem.demo.workflow.mapper.WorkflowHistoryMapper;
 import com.workflowsystem.demo.workflow.repository.WorkflowHistoryRepository;
 import com.workflowsystem.demo.workflow.service.WorkflowService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 
 @RestController
 @RequestMapping("/workflow")
+@SecurityRequirement(name = "bearerAuth")
+@Tag(
+    name = "Workflow Management",
+    description = "Endpoints for managing workflow requests"
+)
+
 public class WorkflowController {
     private final WorkflowService workflowService;
     private final UserRepository userRepository;
@@ -37,6 +47,28 @@ public class WorkflowController {
 
     @PostMapping("/submit")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(
+        summary = "Submit workflow request",
+        description = "Allows authenticated users to submit workflow requests"
+    )
+    @ApiResponses({
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+        responseCode = "200",
+        description = "Workflow request submitted successfully"
+    ),
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+        responseCode = "400",
+        description = "Validation failed"
+    ),
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized"
+    ),
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+        responseCode = "403",
+        description = "Access denied"
+    )
+})
     public ApiResponse<WorkflowResponse> submitRequest(
             @Valid @RequestBody WorkflowSubmitRequest request,
             Authentication authentication) {
@@ -52,8 +84,26 @@ public class WorkflowController {
         );
     }
 
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "List of workflow requests retrieved successfully"
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized"
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "403",
+            description = "Access denied"
+        )
+    })
     @GetMapping("/my-requests")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(
+        summary = "Get my workflow requests",
+        description = "Retrieves a list of workflow requests submitted by the authenticated user"
+    )
     public ApiResponse<List<WorkflowResponse>> getMyRequests(Authentication authentication){
         User currentUser = userRepository.findByEmail(authentication.getName())
                             .orElseThrow(()-> new ResourceNotFoundException("Authenticated user not found"));
@@ -69,6 +119,10 @@ public class WorkflowController {
 
     @GetMapping("/status/{status}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(
+        summary = "Get workflow requests by status",
+        description = "Retrieves a list of workflow requests based on their status"
+    )
     public ApiResponse<List<WorkflowResponse>> getRequestByStatus(@PathVariable WorkflowStatus status) {
         List<WorkflowResponse> workflowResponses = workflowService.getRequestsByStatus(status);
         return new ApiResponse<>(
@@ -80,6 +134,10 @@ public class WorkflowController {
     
     @GetMapping("/{id}/history")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(
+        summary = "Get workflow history",
+        description = "Retrieves the history of a specific workflow request"
+    )
     public ApiResponse<List<WorkflowHistoryResponse>> getWorkflowHistory(@PathVariable Long id) {
         List<WorkflowHistoryResponse> workflowHistoryResponses = workflowHistoryRepository
                 .findByWorkflowRequestIdOrderByChangedAtAsc(id)
@@ -96,6 +154,10 @@ public class WorkflowController {
 
     @GetMapping("/{id}/review")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Operation(
+        summary = "Review workflow request",
+        description = "Allows authenticated users to review a specific workflow request"
+    )
     public ApiResponse<WorkflowResponse> reviewRequest(
             @PathVariable @NonNull Long id,
             Authentication authentication) {
@@ -113,6 +175,10 @@ public class WorkflowController {
 
     @GetMapping("/{id}/approve")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Operation(
+        summary = "Approve workflow request",
+        description = "Allows authenticated users to approve a specific workflow request"
+    )
     public ApiResponse<WorkflowResponse> approveRequest(
             @PathVariable @NonNull Long id,
             Authentication authentication) {
@@ -129,6 +195,10 @@ public class WorkflowController {
 
     @GetMapping("/{id}/reject")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(
+        summary = "Reject workflow request",
+        description = "Allows authenticated users to reject a specific workflow request"
+    )
     public ApiResponse<WorkflowResponse> rejectRequest(
             @PathVariable @NonNull Long id,
             Authentication authentication) {
