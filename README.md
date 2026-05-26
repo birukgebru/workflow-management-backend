@@ -1,8 +1,8 @@
-# Workflow Management System
+# Enterprise Workflow Management System
 
-Enterprise Workflow Management System is a backend-driven platform designed to manage approval workflows, role-based processing, audit tracking, and workflow lifecycle management.
+An Enterprise Workflow Management System is a backend platform. The platrom designed to handle full lifecycle of busines workflows. This system also manages role-based operations and audit tracking. 
 
-The system demonstrates enterprise backend engineering concepts including JWT authentication, RBAC, workflow orchestration, audit logging, transactional integrity, and REST API documentation.
+The system demonstrates enterprise backend engineering concepts. Implements JWT authentication and RBAC for security. In additon  to workflow management, it handles audit logs. Ensures transactional integrity and have REST API documentation.
 
 ## FEATURES
 Authentication
@@ -22,8 +22,7 @@ Workflow Engine
 
 Auditability
 - Workflow history tracking
-- Audit logs
-- Action traceability
+- Audit logs and action traceability
 
 API
 - RESTful API
@@ -40,9 +39,9 @@ API
 - Swagger/OpenAPI
 - Maven
 
-## Architecture
+## ARCHITECTURE
 
-The application follows layered modular monolith architecture (auth, workflow, audit, shared, config) each separated into controller, service, repository, dto, mapper, entity.
+The application follows layered modular monolith architecture (auth, workflow, audit, shared, config). Each module is separated into controller, service, repository, dto, mapper, entity.
 
 ![Architecture Diagram](docs/images/architecture-diagram-layered.png)
 
@@ -68,7 +67,6 @@ src/main/java/com/workflowsystem/demo
 │   └───service
 ├───config
 ├───shared
-│   ├───controller
 │   ├───exception
 │   └───response
 └───workflow
@@ -107,11 +105,11 @@ src/main/java/com/workflowsystem/demo
 - PostgreSQL
 - Maven
 
-### Installations 
+### Installations
 
-1. git clone https://github.com/damienbeaufils/spring-boot-clean-architecture-demo.git
+1. git clone https://github.com/birukgebru/workflow-management-backend.git
 
-2. cd spring-boot-clean-architecture-demo
+2. cd workflow-management-backend.git
 
 ### Run Application 
 - mvn spring-boot:run
@@ -152,6 +150,19 @@ http://localhost:8080
 ```text
 http://localhost:8080/swagger-ui/index.html
 ```
+
+### Swagger-ui
+![Swagger-ui](docs/images/swagger-ui-1.png)
+
+### Workflow Endpoints
+![Workflow-endpoints](docs/images/swagger-ui-workflow-management.png)
+
+### ApiResponse Structure and Tokens (AccessToken & RefreshToken)
+![ApiResponse-and-Tokens](docs/images/swagger-ui-api-response-structure-and-tokens.png)
+
+### Authorization
+![Authorization](docs/images/swagger-ui-authorization.png)
+
 
 ## FUTURE IMPROVEMENTS
 
