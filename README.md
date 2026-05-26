@@ -139,7 +139,7 @@ Update the following values:
 mvn spring-boot:run
 ```
 
-Application URL:
+### Application URL
 
 ```text
 http://localhost:8080
