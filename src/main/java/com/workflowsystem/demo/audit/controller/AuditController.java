@@ -32,7 +32,7 @@ public class AuditController {
     }
 
     @GetMapping("/logs")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
         summary = "Get audit logs",
         description = "Retrieves a list of audit logs"

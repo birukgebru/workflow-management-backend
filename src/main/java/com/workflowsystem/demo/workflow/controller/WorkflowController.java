@@ -133,7 +133,7 @@ public class WorkflowController {
     }
     
     @GetMapping("/{id}/history")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'APPROVER', 'ADMIN')")
     @Operation(
         summary = "Get workflow history",
         description = "Retrieves the history of a specific workflow request"
@@ -153,7 +153,7 @@ public class WorkflowController {
     }
 
     @GetMapping("/{id}/review")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'REVIEWER')")
     @Operation(
         summary = "Review workflow request",
         description = "Allows authenticated users to review a specific workflow request"
@@ -174,7 +174,7 @@ public class WorkflowController {
     }
 
     @GetMapping("/{id}/approve")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'APPROVER')")
     @Operation(
         summary = "Approve workflow request",
         description = "Allows authenticated users to approve a specific workflow request"
@@ -194,7 +194,7 @@ public class WorkflowController {
     }
 
     @GetMapping("/{id}/reject")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('APPROVER', 'ADMIN')")
     @Operation(
         summary = "Reject workflow request",
         description = "Allows authenticated users to reject a specific workflow request"
