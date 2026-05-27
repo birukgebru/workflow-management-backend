@@ -13,6 +13,7 @@ import com.workflowsystem.demo.auth.entity.RefreshToken;
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.enums.Role;
 import com.workflowsystem.demo.auth.mapper.UserMapper;
+import com.workflowsystem.demo.auth.repository.RoleRepository;
 import com.workflowsystem.demo.auth.repository.UserRepository;
 import com.workflowsystem.demo.auth.security.JwtService;
 import com.workflowsystem.demo.shared.exception.AuthenticationException;
@@ -24,12 +25,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    private final RoleRepository roleRepository;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenService refreshTokenService) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenService refreshTokenService, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.refreshTokenService = refreshTokenService;
+        this.roleRepository = roleRepository;
     }
 
     public UserResponse register (RegisterRequest request) {
@@ -47,7 +50,9 @@ public class AuthService {
         user.setPassword(
             passwordEncoder.encode(request.getPassword())
         );
-        user.getRoles().add(Role.ROLE_USER);
+        com.workflowsystem.demo.auth.entity.Role defaultRole = roleRepository.findByName(Role.ROLE_USER)
+            .orElseThrow(() -> new ResourceNotFoundException("Default role not found"));
+        user.getRoles().add(defaultRole);
 
         User savedUser = userRepository.save(user);
         return UserMapper.toUserResponse(savedUser);
