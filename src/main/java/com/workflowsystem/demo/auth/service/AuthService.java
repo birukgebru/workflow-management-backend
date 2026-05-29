@@ -88,8 +88,13 @@ public class AuthService {
                                     );
 
         if(refreshTokenService.isExpired(refreshToken)){
-            throw new AuthenticationException("Refresh toke expired");
+            throw new AuthenticationException("Refresh token expired");
         }
+
+        if(refreshToken.isRevoked()){
+            throw new AuthenticationException("Refresh token revoked");
+        }
+      
 
         User user = refreshToken.getUser();
 

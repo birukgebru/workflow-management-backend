@@ -21,7 +21,7 @@ spring:
 
 jwt:
   secret: mylogestsecretkeyforenterpriseworkflowmanagement222242
-  expiration: 86400000
+  expiration: 90000 
 
 refresh-token:
   expiration: 604800000

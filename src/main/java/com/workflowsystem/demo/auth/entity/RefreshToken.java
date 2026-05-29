@@ -29,7 +29,7 @@ public class RefreshToken {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Boolean getRevoked() {
+    public Boolean isRevoked() {
         return revoked;
     }
 
