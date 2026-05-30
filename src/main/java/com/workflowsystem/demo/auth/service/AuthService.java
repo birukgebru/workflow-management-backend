@@ -68,7 +68,7 @@ public class AuthService {
             throw new AuthenticationException("Invalid credentials");
         }
 
-        String accessToken = jwtService.generateToken(user.getEmail());
+        String accessToken = jwtService.generateToken(user.getEmail(), user.getTokenVersion());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
         return new LoginResponse(
@@ -98,7 +98,7 @@ public class AuthService {
 
         User user = refreshToken.getUser();
 
-        String newAccessToken = jwtService.generateToken(user.getEmail());
+        String newAccessToken = jwtService.generateToken(user.getEmail(), user.getTokenVersion());
 
         return new LoginResponse(
             user.getId(),

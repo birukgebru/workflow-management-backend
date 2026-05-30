@@ -1,6 +1,5 @@
 package com.workflowsystem.demo.auth.security;
 
-import java.security.Key;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
@@ -21,9 +20,10 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private Long expirationTime;
 
-    public String generateToken(String email) {
+    public String generateToken(String email, int tokenVersion) {
         return Jwts.builder()
                 .subject(email)
+                .claim("tokenVersion", tokenVersion)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getSigningKey())
@@ -39,6 +39,16 @@ public class JwtService {
             extractClaims(token);
 
             return true;    
+        }   catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isTokenValid(String token, int tokenVersion) {
+        try {
+            Claims claims = extractClaims(token);
+
+            return claims.get("tokenVersion", Integer.class) == tokenVersion;
         }   catch (Exception e) {
             return false;
         }

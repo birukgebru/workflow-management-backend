@@ -26,6 +26,9 @@ public class User {
     private String name;
     private Boolean enabled;
 
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private int tokenVersion = 0;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -70,6 +73,14 @@ public class User {
 
     public Boolean getEnabled() {
         return enabled;
+    }
+
+    public int getTokenVersion() {
+        return tokenVersion;
+    }
+
+    public void setTokenVersion(int tokenVersion) {
+        this.tokenVersion = tokenVersion;
     }
 
     @PrePersist

@@ -8,15 +8,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.workflowsystem.demo.auth.security.JwtService;
-
+import com.workflowsystem.demo.auth.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import com.workflowsystem.demo.auth.security.CustomUserDetailsService;
-
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter{
@@ -45,8 +41,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
         userEmail = jwtService.extractEmail(jwtToken);
 
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-            if(jwtService.isTokenValid(jwtToken)){
+            User user = userDetailsService.loadUserEntityByEmail(userEmail);
+            UserDetails userDetails = userDetailsService.toUserDetails(user);
+            if(jwtService.isTokenValid(jwtToken, user.getTokenVersion())){
                 UsernamePasswordAuthenticationToken authToken =  
                     new UsernamePasswordAuthenticationToken(
                         userDetails,
