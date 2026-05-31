@@ -3,22 +3,30 @@ package com.workflowsystem.demo.auth.service;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.workflowsystem.demo.auth.dto.ResetPasswordRequest;
 import com.workflowsystem.demo.auth.entity.PasswordResetToken;
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.repository.PasswordResetTokenRepository;
 import com.workflowsystem.demo.auth.repository.UserRepository;
+import com.workflowsystem.demo.shared.exception.InvalidTokenException;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 
 @Service
 public class PasswordResetService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final UserRepository userRepository;
-    
-    public PasswordResetService(PasswordResetTokenRepository passwordResetTokenRepository, UserRepository userRepository) {
+    private final PasswordEncoder passwordEncoder;
+    public PasswordResetService(
+        PasswordResetTokenRepository passwordResetTokenRepository, 
+        UserRepository userRepository, 
+        PasswordEncoder passwordEncoder
+    ) {
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public String generateResetToken(String email) {
@@ -34,5 +42,36 @@ public class PasswordResetService {
         passwordResetTokenRepository.save(psdResetToken);
 
         return psdResetToken.getToken();
+    }
+
+    public void resetPassword(ResetPasswordRequest request) {
+
+        PasswordResetToken token = passwordResetTokenRepository.findByToken(request.getToken())
+                        .orElseThrow(() -> new ResourceNotFoundException("Invalid password reset token"));
+
+        validateResetToken(token);
+
+        User user = token.getUser();
+
+        user.setPassword(
+                passwordEncoder.encode(request.getNewPassword())
+        );
+
+        userRepository.save(user);
+
+        token.setUsed(true);
+
+        passwordResetTokenRepository.save(token);
+    }
+
+    private void validateResetToken(PasswordResetToken token) {
+        if (token.isUsed()) {
+            throw new InvalidTokenException();
+        }
+
+        if (token.getExpiryDate()
+                .isBefore(LocalDateTime.now())) {
+            throw new InvalidTokenException();
+        }
     }
 }

@@ -9,6 +9,7 @@ import com.workflowsystem.demo.auth.dto.LoginResponse;
 import com.workflowsystem.demo.auth.dto.LogoutRequest;
 import com.workflowsystem.demo.auth.dto.RefreshTokenRequest;
 import com.workflowsystem.demo.auth.dto.RegisterRequest;
+import com.workflowsystem.demo.auth.dto.ResetPasswordRequest;
 import com.workflowsystem.demo.auth.dto.UserResponse;
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.repository.UserRepository;
@@ -25,6 +26,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -139,4 +143,20 @@ public class AuthController {
             null
         );
     }
+
+    @PostMapping("/reset-password")
+    @Operation(
+        summary = "Reset password",
+        description = "Resets the user's password using the provided reset token"
+    )
+    public ApiResponse<Void> getMethodName(@RequestBody ResetPasswordRequest request) {
+        passwordResetService.resetPassword(request);
+
+        return new ApiResponse<>(
+            true,
+            "Password reset successfully",
+            null
+        );
+    }
+    
 }
