@@ -50,7 +50,7 @@ public class AuthService {
         user.setPassword(
             passwordEncoder.encode(request.getPassword())
         );
-        com.workflowsystem.demo.auth.entity.Role defaultRole = roleRepository.findByName(Role.ROLE_USER)
+        com.workflowsystem.demo.auth.entity.Role defaultRole = roleRepository.findByName(Role.ROLE_REQUESTER)
             .orElseThrow(() -> new ResourceNotFoundException("Default role not found"));
         user.getRoles().add(defaultRole);
 

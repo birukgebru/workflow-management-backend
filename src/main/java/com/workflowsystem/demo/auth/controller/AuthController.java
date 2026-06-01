@@ -11,14 +11,17 @@ import com.workflowsystem.demo.auth.dto.RefreshTokenRequest;
 import com.workflowsystem.demo.auth.dto.RegisterRequest;
 import com.workflowsystem.demo.auth.dto.ResetPasswordRequest;
 import com.workflowsystem.demo.auth.dto.UserResponse;
-import com.workflowsystem.demo.auth.repository.UserRepository;
+import com.workflowsystem.demo.auth.mapper.UserMapper;
 import com.workflowsystem.demo.auth.service.AuthService;
+import com.workflowsystem.demo.auth.service.CurrentUserService;
 import com.workflowsystem.demo.auth.service.PasswordResetService;
 import com.workflowsystem.demo.auth.service.RefreshTokenService;
 import com.workflowsystem.demo.shared.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,11 +36,13 @@ public class AuthController {
     private final AuthService authService;
     private final RefreshTokenService refreshTokenService;
     private final PasswordResetService passwordResetService;
+    private final CurrentUserService currentUserService;
 
-    public AuthController(AuthService authService, RefreshTokenService refreshTokenService, UserRepository userRepository, PasswordResetService passwordResetService) {
+    public AuthController(AuthService authService, RefreshTokenService refreshTokenService, PasswordResetService passwordResetService, CurrentUserService currentUserService) {
         this.authService = authService;
         this.refreshTokenService = refreshTokenService;
         this.passwordResetService = passwordResetService;
+        this.currentUserService = currentUserService;
     }
 
     @PostMapping("/register")
@@ -147,6 +152,22 @@ public class AuthController {
             true,
             "Password reset successfully",
             null
+        );
+    }
+
+    @GetMapping("/me")
+    @Operation(
+        summary = "Current user",
+        description = "Returns the authenticated user's profile"
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    public ApiResponse<UserResponse> me() {
+        UserResponse userResponse = UserMapper.toUserResponse(currentUserService.getCurrentUser());
+
+        return new ApiResponse<>(
+            true,
+            "Current user fetched successfully",
+            userResponse
         );
     }
     

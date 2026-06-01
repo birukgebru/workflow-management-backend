@@ -50,7 +50,7 @@ public class PasswordResetService {
                         .orElseThrow(() -> new ResourceNotFoundException("Invalid password reset token"));
         validateResetToken(token);
         User user = token.getUser();
-        user.setPassword(passwordEncoder.encode(request.getNewPassword());
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         userRepository.save(user);
 

@@ -6,7 +6,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.repository.UserRepository;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
@@ -46,29 +45,30 @@ public class WorkflowController {
     }
 
     @PostMapping("/submit")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
         summary = "Submit workflow request",
         description = "Allows authenticated users to submit workflow requests"
     )
     @ApiResponses({
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-        responseCode = "200",
-        description = "Workflow request submitted successfully"
-    ),
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-        responseCode = "400",
-        description = "Validation failed"
-    ),
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-        responseCode = "401",
-        description = "Unauthorized"
-    ),
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-        responseCode = "403",
-        description = "Access denied"
-    )
-})
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Workflow request submitted successfully"
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Validation failed"
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "401",
+            description = "Unauthorized"
+        ),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "403",
+            description = "Access denied"
+        )
+    })
+
     public ApiResponse<WorkflowResponse> submitRequest(
             @Valid @RequestBody WorkflowSubmitRequest request,
             Authentication authentication) {
@@ -99,7 +99,6 @@ public class WorkflowController {
         )
     })
     @GetMapping("/my-requests")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(
         summary = "Get my workflow requests",
         description = "Retrieves a list of workflow requests submitted by the authenticated user"
@@ -118,7 +117,7 @@ public class WorkflowController {
     }
 
     @GetMapping("/status/{status}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
         summary = "Get workflow requests by status",
         description = "Retrieves a list of workflow requests based on their status"
@@ -133,7 +132,7 @@ public class WorkflowController {
     }
     
     @GetMapping("/{id}/history")
-    @PreAuthorize("hasAnyRole('USER', 'APPROVER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('APPROVER', 'ADMIN')")
     @Operation(
         summary = "Get workflow history",
         description = "Retrieves the history of a specific workflow request"

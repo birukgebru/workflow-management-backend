@@ -11,7 +11,7 @@ public class Role {
 
     @Column(unique = true, nullable = false)
     @Enumerated(EnumType.STRING)
-    private com.workflowsystem.demo.auth.enums.Role name = com.workflowsystem.demo.auth.enums.Role.ROLE_USER;
+    private com.workflowsystem.demo.auth.enums.Role name = com.workflowsystem.demo.auth.enums.Role.ROLE_REQUESTER;
 
     public Role() {}
 
