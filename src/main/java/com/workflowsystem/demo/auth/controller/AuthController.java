@@ -11,24 +11,17 @@ import com.workflowsystem.demo.auth.dto.RefreshTokenRequest;
 import com.workflowsystem.demo.auth.dto.RegisterRequest;
 import com.workflowsystem.demo.auth.dto.ResetPasswordRequest;
 import com.workflowsystem.demo.auth.dto.UserResponse;
-import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.repository.UserRepository;
 import com.workflowsystem.demo.auth.service.AuthService;
 import com.workflowsystem.demo.auth.service.PasswordResetService;
 import com.workflowsystem.demo.auth.service.RefreshTokenService;
-import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.shared.response.ApiResponse;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/auth")
@@ -39,13 +32,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AuthController {
     private final AuthService authService;
     private final RefreshTokenService refreshTokenService;
-    private final UserRepository userRepository;
     private final PasswordResetService passwordResetService;
 
     public AuthController(AuthService authService, RefreshTokenService refreshTokenService, UserRepository userRepository, PasswordResetService passwordResetService) {
         this.authService = authService;
         this.refreshTokenService = refreshTokenService;
-        this.userRepository = userRepository;
         this.passwordResetService = passwordResetService;
     }
 
@@ -132,7 +123,7 @@ public class AuthController {
         summary = "Forgot password",
         description = "Generates a password reset token and sends it to the user's email"
     )
-    public ApiResponse<Void> forgotPassword(ForgotPasswordRequest request) {
+    public ApiResponse<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
         String token = passwordResetService.generateResetToken(request.getEmail());
 
         System.out.println("password reset token email sent: " + token);
@@ -149,7 +140,7 @@ public class AuthController {
         summary = "Reset password",
         description = "Resets the user's password using the provided reset token"
     )
-    public ApiResponse<Void> getMethodName(@RequestBody ResetPasswordRequest request) {
+    public ApiResponse<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         passwordResetService.resetPassword(request);
 
         return new ApiResponse<>(

@@ -1,9 +1,8 @@
 package com.workflowsystem.demo.auth.dto;
 
-import com.workflowsystem.demo.auth.entity.Role;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class RegisterRequest {
@@ -17,6 +16,10 @@ public class RegisterRequest {
 
     @NotBlank(message = "Password is required")
     @Size(min = 6, max = 32, message = "Password must be between 6 and 32 characters long")
+    @Pattern(
+        regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$",
+        message = "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+    )
     private String password;
 
     @Size(max = 255, message = "Name must be at most 255 characters long")

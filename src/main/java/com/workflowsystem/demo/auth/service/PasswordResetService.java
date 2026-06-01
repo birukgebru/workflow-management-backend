@@ -30,12 +30,13 @@ public class PasswordResetService {
     }
 
     public String generateResetToken(String email) {
-        PasswordResetToken psdResetToken = new PasswordResetToken();
-        psdResetToken.setToken(UUID.randomUUID().toString());
-
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
+        PasswordResetToken psdResetToken = passwordResetTokenRepository.findByUser(user)
+                .orElseGet(PasswordResetToken::new);
+
+        psdResetToken.setToken(generateUniqueToken());
         psdResetToken.setUser(user);
         psdResetToken.setExpiryDate(LocalDateTime.now().plusHours(1));
         psdResetToken.setUsed(false);
@@ -45,17 +46,11 @@ public class PasswordResetService {
     }
 
     public void resetPassword(ResetPasswordRequest request) {
-
         PasswordResetToken token = passwordResetTokenRepository.findByToken(request.getToken())
                         .orElseThrow(() -> new ResourceNotFoundException("Invalid password reset token"));
-
         validateResetToken(token);
-
         User user = token.getUser();
-
-        user.setPassword(
-                passwordEncoder.encode(request.getNewPassword())
-        );
+        user.setPassword(passwordEncoder.encode(request.getNewPassword());
 
         userRepository.save(user);
 
@@ -73,5 +68,15 @@ public class PasswordResetService {
                 .isBefore(LocalDateTime.now())) {
             throw new InvalidTokenException();
         }
+    }
+
+    private String generateUniqueToken() {
+        String token;
+
+        do {
+            token = UUID.randomUUID().toString();
+        } while (passwordResetTokenRepository.existsByToken(token));
+
+        return token;
     }
 }
