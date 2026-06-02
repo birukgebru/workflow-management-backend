@@ -18,7 +18,9 @@ public interface WorkflowService {
 
     List<WorkflowResponse> getMyRequests(User currentUser);
     List<WorkflowResponse> getRequestsByStatus(WorkflowStatus status);
+    WorkflowResponse getRequestById(Long id); 
     WorkflowResponse reviewRequest(@NonNull Long requestId, User currentUser);
     WorkflowResponse approveRequest(@NonNull Long requestId, User currentUser);
     WorkflowResponse rejectRequest(@NonNull Long requestId, User currentUser);
+
 }

@@ -170,24 +170,27 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflowRequest.setRejectedAt(LocalDateTime.now());
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
 
-        logWorkflowHistory(
-                savedWorkflowRequest,
-                previousStatus,
-                savedWorkflowRequest.getStatus(),
-                WorkflowAction.REJECTED,
-                currentUser
-        );
+        logWorkflowHistory(savedWorkflowRequest, previousStatus, savedWorkflowRequest.getStatus(), WorkflowAction.REJECTED, currentUser);
 
-        logAudit(
-                "REJECTED",
-                "WorkflowRequest",
-                savedWorkflowRequest.getId(),
-                currentUser,
-                "Workflow request rejected"
-        );
+        logAudit("REJECTED", "WorkflowRequest", savedWorkflowRequest.getId(), currentUser, "Workflow request rejected");
 
         return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public WorkflowResponse getRequestById(Long id) {
+        WorkflowRequest workflowRequest =
+                workflowRequestRepository.findById(id)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Workflow request not found"));
+
+        return WorkflowRequestMapper.toWorkflowResponse(workflowRequest);
+        }
+
+
+
 
     private void logWorkflowHistory(
         WorkflowRequest workflowRequest,

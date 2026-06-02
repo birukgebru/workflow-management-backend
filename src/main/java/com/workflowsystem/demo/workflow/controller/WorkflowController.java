@@ -45,7 +45,7 @@ public class WorkflowController {
     }
 
     @PostMapping("/submit")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('REQUESTER','ADMIN')")
     @Operation(
         summary = "Submit workflow request",
         description = "Allows authenticated users to submit workflow requests"
@@ -68,7 +68,6 @@ public class WorkflowController {
             description = "Access denied"
         )
     })
-
     public ApiResponse<WorkflowResponse> submitRequest(
             @Valid @RequestBody WorkflowSubmitRequest request,
             Authentication authentication) {
@@ -98,6 +97,22 @@ public class WorkflowController {
             description = "Access denied"
         )
     })
+
+    //TODO: add workflow security to other endpoints too. 
+    @GetMapping("/{id}")
+    @PreAuthorize("@workflowSecurity.canViewRequest(#id, authentication)")
+    public ApiResponse<WorkflowResponse> getRequest(@PathVariable Long id) {
+        WorkflowResponse workflowResponse = workflowService.getRequestById(id);
+        
+        return new ApiResponse<>(
+                true,
+                "Workflow request retrieved",
+                workflowResponse
+        );
+    }
+
+
+
     @GetMapping("/my-requests")
     @Operation(
         summary = "Get my workflow requests",
@@ -151,7 +166,7 @@ public class WorkflowController {
         );
     }
 
-    @GetMapping("/{id}/review")
+    @PutMapping("/{id}/review")
     @PreAuthorize("hasAnyRole('ADMIN', 'REVIEWER')")
     @Operation(
         summary = "Review workflow request",
@@ -172,7 +187,7 @@ public class WorkflowController {
         );
     }
 
-    @GetMapping("/{id}/approve")
+    @PutMapping("/{id}/approve")
     @PreAuthorize("hasAnyRole('ADMIN', 'APPROVER')")
     @Operation(
         summary = "Approve workflow request",
@@ -192,7 +207,7 @@ public class WorkflowController {
         );
     }
 
-    @GetMapping("/{id}/reject")
+    @PutMapping("/{id}/reject")
     @PreAuthorize("hasAnyRole('APPROVER', 'ADMIN')")
     @Operation(
         summary = "Reject workflow request",
