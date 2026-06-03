@@ -65,14 +65,14 @@ public class AuthService {
         if (!user.isEnabled()) {
             throw new AuthenticationException("Account is disabled");
         }
-        
+
         boolean passwordMatches = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if(!passwordMatches){
             throw new AuthenticationException("Invalid credentials");
         }
 
-        String accessToken = jwtService.generateToken(user.getEmail(), user.getTokenVersion());
+        String accessToken = jwtService.generateToken(user);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
         return new LoginResponse(
@@ -102,7 +102,7 @@ public class AuthService {
 
         User user = refreshToken.getUser();
 
-        String newAccessToken = jwtService.generateToken(user.getEmail(), user.getTokenVersion());
+        String newAccessToken = jwtService.generateToken(user);
 
         return new LoginResponse(
             user.getId(),

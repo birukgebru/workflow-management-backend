@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.workflowsystem.demo.audit.entitiy.AuditLog;
 import com.workflowsystem.demo.audit.repository.AuditLogRepository;
 import com.workflowsystem.demo.auth.entity.User;
+import com.workflowsystem.demo.auth.enums.Role;
+import com.workflowsystem.demo.auth.repository.UserRepository;
 import com.workflowsystem.demo.shared.exception.InvalidWorkflowStateException;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
@@ -28,14 +30,17 @@ public class WorkflowServiceImpl implements WorkflowService {
     private final WorkflowRequestRepository workflowRequestRepository;
     private final WorkflowHistoryRepository workflowHistoryRepository;
     private final AuditLogRepository auditLogRepository;
+    private final UserRepository userRepository;
 
     public WorkflowServiceImpl(
             WorkflowRequestRepository workflowRequestRepository,
             WorkflowHistoryRepository workflowHistoryRepository,
-            AuditLogRepository auditLogRepository) {
+            AuditLogRepository auditLogRepository,
+            UserRepository userRepository) {
         this.workflowRequestRepository = workflowRequestRepository;
         this.workflowHistoryRepository = workflowHistoryRepository;
         this.auditLogRepository = auditLogRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -65,6 +70,17 @@ public class WorkflowServiceImpl implements WorkflowService {
         );
         
         return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
+    }
+
+    
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<WorkflowResponse> getAllWorkflowRequests() {
+        return workflowRequestRepository.findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(WorkflowRequestMapper::toWorkflowResponse)
+                .toList();
     }
 
     @Override
@@ -187,10 +203,72 @@ public class WorkflowServiceImpl implements WorkflowService {
                                         "Workflow request not found"));
 
         return WorkflowRequestMapper.toWorkflowResponse(workflowRequest);
+    }
+
+    @Override
+    @Transactional
+    public WorkflowResponse assignReviewer(Long requestId, Long reviewerId, User currentUser) {
+        WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
+        User reviewer = userRepository.findUserById(reviewerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Reviewer not found"));
+        
+        boolean hasReviewerRole = reviewer.getRoles()
+                .stream()
+                .anyMatch(
+                    r -> r.getName() == Role.ROLE_REVIEWER
+                );
+
+        if(!hasReviewerRole){
+            throw new IllegalArgumentException("User is not a reviewer");
+        }
+    
+        workflowRequest.setAssignedReviewer(reviewer);
+        WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
+
+        logAudit(
+                "ASSIGNED_REVIEWER",
+                "WorkflowRequest",
+                savedWorkflowRequest.getId(),
+                currentUser,
+                "Assigned reviewer with ID " + reviewerId
+        );
+
+        return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
+
+    }
+
+    @Override
+    @Transactional
+    public WorkflowResponse assignApprover(Long requestId, Long approverId, User currentUser) {
+        WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
+        User approver = userRepository.findUserById(approverId)
+                .orElseThrow(() -> new ResourceNotFoundException("Approver not found"));
+
+        boolean hasApproverRole = approver.getRoles()
+                .stream()                
+                .anyMatch(
+                    r -> r.getName() == Role.ROLE_APPROVER
+                );
+
+        if(!hasApproverRole){
+            throw new IllegalArgumentException("User is not an approver");
         }
 
+        workflowRequest.setAssignedApprover(approver);
+        WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
 
+        logAudit(
+                "ASSIGNED_APPROVER",
+                "WorkflowRequest",
+                savedWorkflowRequest.getId(),
+                currentUser,
+                "Assigned approver with ID " + approverId
+        );
 
+        return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
+    }
 
     private void logWorkflowHistory(
         WorkflowRequest workflowRequest,

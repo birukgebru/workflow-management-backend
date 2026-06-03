@@ -1,11 +1,14 @@
 package com.workflowsystem.demo.auth.security;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.workflowsystem.demo.auth.entity.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,10 +23,17 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private Long expirationTime;
 
-    public String generateToken(String email, int tokenVersion) {
+    public String generateToken(User user) {
         return Jwts.builder()
-                .subject(email)
-                .claim("tokenVersion", tokenVersion)
+                .subject(user.getEmail())
+                .claim("tokenVersion", user.getTokenVersion())
+                .claim(
+                    "roles",
+                    user.getRoles()
+                        .stream()
+                        .map(role -> role.getName().name())
+                        .toList()
+                )
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getSigningKey())
@@ -32,6 +42,17 @@ public class JwtService {
 
     public String extractEmail(String token) {
         return extractClaims(token).getSubject();
+    }
+
+    public List<String> extractRoles(String token) {
+        Object roles = extractClaims(token).get("roles");
+        if (!(roles instanceof List<?> roleList)) {
+            return List.of();
+        }
+
+        return roleList.stream()
+                .map(String.class::cast)
+                .toList();
     }
 
     public boolean isTokenValid(String token) {

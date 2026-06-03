@@ -6,6 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.repository.UserRepository;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
@@ -85,7 +86,7 @@ public class WorkflowController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "List of workflow requests retrieved successfully"
+            description = "Workflow request retrieved successfully"
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "401",
@@ -96,7 +97,6 @@ public class WorkflowController {
             description = "Access denied"
         )
     })
-
     //TODO: add workflow security to other endpoints too. 
     @GetMapping("/{id}")
     @PreAuthorize("@workflowSecurity.canViewRequest(#id, authentication)")
@@ -164,6 +164,20 @@ public class WorkflowController {
         );
     }
 
+    @GetMapping
+    @Operation(
+        summary = "Get All Workflow requests",
+        description = "Retrieves a list of all workflow requests"
+    )
+    public ApiResponse<List<WorkflowResponse>> getAllWorkflowRequests() {
+        List<WorkflowResponse> workflowResponses = workflowService.getAllWorkflowRequests();
+        return new ApiResponse<>(
+                true,
+                "All workflow requests retrieved",
+                workflowResponses
+        );
+    }
+
     @PutMapping("/{id}/review")
     @PreAuthorize("hasAnyRole('ADMIN', 'REVIEWER')")
     @Operation(
@@ -226,6 +240,47 @@ public class WorkflowController {
 
     }
 
+    @PutMapping("/{id}/assign-reviewer")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+        summary = "Assign reviewer to workflow request",
+        description = "Allows admin users to assign a reviewer to a specific workflow request"
+    )
+    public ApiResponse<WorkflowResponse> assignReviewer(
+            @PathVariable @NonNull Long id,
+            @RequestParam @NonNull Long reviewerId, 
+            Authentication authentication) {
+        User currentUser = getCurrentUser(authentication);
+
+        WorkflowResponse workflowResponse = workflowService.assignReviewer(id, reviewerId, currentUser);
+
+        return new ApiResponse<>(
+            true,
+            "Reviewer assigned to workflow request",
+            workflowResponse
+        );
+    }
+
+    @PutMapping("/{id}/assign-approver")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+        summary = "Assign approver to a workflow",
+        description = "Allows admin user to assign an approver to a workflow request"
+    )
+    public ApiResponse<WorkflowResponse> assignApprover(
+            @PathVariable @NonNull Long id,
+            @RequestParam @NonNull Long approverId,
+            Authentication authentication) {
+        User currentUser = getCurrentUser(authentication);
+
+        WorkflowResponse workflowResponse = workflowService.assignApprover(id, approverId, currentUser);
+
+        return new ApiResponse<>(
+            true,
+            "Approver assigned to workflow request",
+            workflowResponse
+        );
+    }
 
     // Helpers 
     private User getCurrentUser(Authentication authentication) {

@@ -12,4 +12,5 @@ import com.workflowsystem.demo.auth.entity.User;
 public interface WorkflowRequestRepository extends JpaRepository<WorkflowRequest, Long>{
     List<WorkflowRequest> findBySubmittedByOrderByCreatedAtDesc(User user);
     List<WorkflowRequest> findByStatusOrderByCreatedAtDesc(WorkflowStatus status);
+    List<WorkflowRequest> findAllByOrderByCreatedAtDesc();
 }
