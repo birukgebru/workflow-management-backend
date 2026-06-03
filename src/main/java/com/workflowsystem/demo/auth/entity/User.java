@@ -24,7 +24,7 @@ public class User {
     private String password;
 
     private String name;
-    private Boolean enabled;
+    private Boolean enabled = true;
 
     @Column(nullable = false, columnDefinition = "integer default 0")
     private int tokenVersion = 0;
@@ -71,7 +71,7 @@ public class User {
         this.enabled = enabled;
     }
 
-    public Boolean getEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 

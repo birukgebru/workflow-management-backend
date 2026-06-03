@@ -4,7 +4,8 @@ import com.workflowsystem.demo.audit.entitiy.AuditLog;
 import com.workflowsystem.demo.audit.repository.AuditLogRepository;
 import com.workflowsystem.demo.audit.service.AuditLogService;
 
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.workflowsystem.demo.auth.dto.UserResponse;
@@ -22,7 +23,6 @@ import jakarta.transaction.Transactional;
 public class UserService {
 
     private final AuditLogRepository auditLogRepository;
-    private final AuditLogService auditLogService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
@@ -32,7 +32,6 @@ public class UserService {
 
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.auditLogService = auditLogService;
         this.auditLogRepository = auditLogRepository;
     }
 
@@ -46,7 +45,6 @@ public class UserService {
         if (user.getRoles().stream()
                 .anyMatch(r -> r.getName() == Role.ROLE_ADMIN)
                 && roleName != Role.ROLE_ADMIN) {
-
             throw new AuthenticationException("Admin cannot be demoted");
         }
         
@@ -70,7 +68,62 @@ public class UserService {
         return UserMapper.toUserResponse(savedUser);
     }
 
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserMapper::toUserResponse)
+                .toList();
+    }
 
+    public UserResponse getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found"));
+
+        return UserMapper.toUserResponse(user);
+    }
+
+    @Transactional
+    public UserResponse disableUser(Long id, User currentAdmin) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found"));
+
+        user.setEnabled(false);
+
+        User saved = userRepository.save(user);
+
+        logAudit(
+            "USER_DISABLED",
+            "User",
+            user.getId(),
+            currentAdmin,
+            "User account disabled"
+        );
+
+        return UserMapper.toUserResponse(saved);
+    }
+
+    @Transactional
+    public UserResponse enableUser(Long id, User currentAdmin) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found"));
+
+        user.setEnabled(true);
+
+        User saved = userRepository.save(user);
+
+        logAudit(
+            "USER_ENABLED",
+            "User",
+            user.getId(),
+            currentAdmin,
+            "User account enabled"
+        );
+
+        return UserMapper.toUserResponse(saved);
+    }
 
     private void logAudit(
             String action,
