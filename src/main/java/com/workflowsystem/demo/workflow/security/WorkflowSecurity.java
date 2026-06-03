@@ -54,6 +54,9 @@ public class WorkflowSecurity {
     }
 
 
+    // TODO: Implement canReviewRequest() canApproveRequest() canEditRequest()
+    // canRejectRequest() canCancelRequest() canDeleteRequest() canAssignReviewer() canAssignApprover()canDeleteRequest()
+    
     private boolean isAdmin(Authentication authentication) {
         return authentication.getAuthorities()
                 .stream()

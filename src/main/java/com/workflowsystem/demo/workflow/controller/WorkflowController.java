@@ -71,8 +71,7 @@ public class WorkflowController {
     public ApiResponse<WorkflowResponse> submitRequest(
             @Valid @RequestBody WorkflowSubmitRequest request,
             Authentication authentication) {
-        User currentUser = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
+        User currentUser = getCurrentUser(authentication);
 
         WorkflowResponse workflowResponse = workflowService.submitRequest(request, currentUser);
 
@@ -119,8 +118,7 @@ public class WorkflowController {
         description = "Retrieves a list of workflow requests submitted by the authenticated user"
     )
     public ApiResponse<List<WorkflowResponse>> getMyRequests(Authentication authentication){
-        User currentUser = userRepository.findByEmail(authentication.getName())
-                            .orElseThrow(()-> new ResourceNotFoundException("Authenticated user not found"));
+        User currentUser = getCurrentUser(authentication);
 
         List<WorkflowResponse> workflowResponses = workflowService.getMyRequests(currentUser);
 
@@ -175,8 +173,7 @@ public class WorkflowController {
     public ApiResponse<WorkflowResponse> reviewRequest(
             @PathVariable @NonNull Long id,
             Authentication authentication) {
-        User currentUser = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
+        User currentUser = getCurrentUser(authentication);
 
         WorkflowResponse workflowResponse = workflowService.reviewRequest(id, currentUser);
 
@@ -196,8 +193,9 @@ public class WorkflowController {
     public ApiResponse<WorkflowResponse> approveRequest(
             @PathVariable @NonNull Long id,
             Authentication authentication) {
-        User currentUser = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
+
+        User currentUser = getCurrentUser(authentication);
+
         WorkflowResponse workflowResponse = workflowService.approveRequest(id, currentUser);
 
         return new ApiResponse<>(
@@ -216,8 +214,8 @@ public class WorkflowController {
     public ApiResponse<WorkflowResponse> rejectRequest(
             @PathVariable @NonNull Long id,
             Authentication authentication) {
-        User currentUser = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
+        User currentUser = getCurrentUser(authentication);
+        
         WorkflowResponse workflowResponse = workflowService.rejectRequest(id, currentUser);
 
         return new ApiResponse<>(
@@ -226,5 +224,12 @@ public class WorkflowController {
             workflowResponse
         );
 
+    }
+
+
+    // Helpers 
+    private User getCurrentUser(Authentication authentication) {
+        return userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
     }
 }
