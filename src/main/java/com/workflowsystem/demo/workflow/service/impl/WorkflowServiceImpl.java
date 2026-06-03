@@ -112,6 +112,10 @@ public class WorkflowServiceImpl implements WorkflowService {
             throw new InvalidWorkflowStateException("Only pending requests can be reviewed");
         }
 
+        if(workflowRequest.getAssignedReviewer() == null || !workflowRequest.getAssignedReviewer().getId().equals(currentUser.getId())) {
+            throw new IllegalStateException("You are not the assigned reviewer for this request");
+        }
+
         workflowRequest.setStatus(WorkflowStatus.UNDER_REVIEW);
         workflowRequest.setReviewedBy(currentUser);
         workflowRequest.setReviewedAt(LocalDateTime.now());
@@ -147,6 +151,10 @@ public class WorkflowServiceImpl implements WorkflowService {
             throw new InvalidWorkflowStateException("Only workflow requests under review can be approved");
         }
 
+        if(workflowRequest.getAssignedApprover() == null || !workflowRequest.getAssignedApprover().getId().equals(currentUser.getId())) {
+            throw new IllegalStateException("You are not the assigned approver for this request");
+        }
+
         workflowRequest.setStatus(WorkflowStatus.APPROVED);
         workflowRequest.setApprovedBy(currentUser);
         workflowRequest.setApprovedAt(LocalDateTime.now());
@@ -179,6 +187,10 @@ public class WorkflowServiceImpl implements WorkflowService {
         WorkflowStatus previousStatus = workflowRequest.getStatus();
         if (previousStatus != WorkflowStatus.UNDER_REVIEW) {
             throw new IllegalStateException("Only workflow requests under review can be rejected");
+        }
+
+        if(workflowRequest.getAssignedApprover() == null || !workflowRequest.getAssignedApprover().getId().equals(currentUser.getId())) {
+                 throw new IllegalStateException("You are not the assigned approver for this request to reject");
         }
 
         workflowRequest.setStatus(WorkflowStatus.REJECTED);
