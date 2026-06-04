@@ -24,6 +24,7 @@ import com.workflowsystem.demo.workflow.mapper.WorkflowRequestMapper;
 import com.workflowsystem.demo.workflow.repository.WorkflowHistoryRepository;
 import com.workflowsystem.demo.workflow.repository.WorkflowRequestRepository;
 import com.workflowsystem.demo.workflow.service.WorkflowService;
+import com.workflowsystem.demo.workflow.state.WorkflowStateMachine;
 
 @Service
 public class WorkflowServiceImpl implements WorkflowService {
@@ -31,16 +32,19 @@ public class WorkflowServiceImpl implements WorkflowService {
     private final WorkflowHistoryRepository workflowHistoryRepository;
     private final AuditLogRepository auditLogRepository;
     private final UserRepository userRepository;
+    private final WorkflowStateMachine workflowStateMachine;
 
     public WorkflowServiceImpl(
             WorkflowRequestRepository workflowRequestRepository,
             WorkflowHistoryRepository workflowHistoryRepository,
             AuditLogRepository auditLogRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            WorkflowStateMachine workflowStateMachine) {
         this.workflowRequestRepository = workflowRequestRepository;
         this.workflowHistoryRepository = workflowHistoryRepository;
         this.auditLogRepository = auditLogRepository;
         this.userRepository = userRepository;
+        this.workflowStateMachine = workflowStateMachine;
     }
 
     @Override
@@ -108,9 +112,8 @@ public class WorkflowServiceImpl implements WorkflowService {
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
 
         WorkflowStatus previousStatus = workflowRequest.getStatus();
-        if (previousStatus != WorkflowStatus.PENDING) {
-            throw new InvalidWorkflowStateException("Only pending requests can be reviewed");
-        }
+
+        workflowStateMachine.validateTransition(previousStatus, WorkflowStatus.UNDER_REVIEW);
 
         if(workflowRequest.getAssignedReviewer() == null || !workflowRequest.getAssignedReviewer().getId().equals(currentUser.getId())) {
             throw new IllegalStateException("You are not the assigned reviewer for this request");
