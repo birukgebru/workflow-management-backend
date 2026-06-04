@@ -112,7 +112,6 @@ public class WorkflowServiceImpl implements WorkflowService {
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
 
         WorkflowStatus previousStatus = workflowRequest.getStatus();
-
         workflowStateMachine.validateTransition(previousStatus, WorkflowStatus.UNDER_REVIEW);
 
         if(workflowRequest.getAssignedReviewer() == null || !workflowRequest.getAssignedReviewer().getId().equals(currentUser.getId())) {
@@ -150,9 +149,8 @@ public class WorkflowServiceImpl implements WorkflowService {
         WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
         WorkflowStatus previousStatus = workflowRequest.getStatus();
-        if (previousStatus != WorkflowStatus.UNDER_REVIEW) {
-            throw new InvalidWorkflowStateException("Only workflow requests under review can be approved");
-        }
+        workflowStateMachine.validateTransition(previousStatus, WorkflowStatus.APPROVED);
+
 
         if(workflowRequest.getAssignedApprover() == null || !workflowRequest.getAssignedApprover().getId().equals(currentUser.getId())) {
             throw new IllegalStateException("You are not the assigned approver for this request");
@@ -188,9 +186,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
         WorkflowStatus previousStatus = workflowRequest.getStatus();
-        if (previousStatus != WorkflowStatus.UNDER_REVIEW) {
-            throw new IllegalStateException("Only workflow requests under review can be rejected");
-        }
+        workflowStateMachine.validateTransition(previousStatus, WorkflowStatus.REJECTED);
 
         if(workflowRequest.getAssignedApprover() == null || !workflowRequest.getAssignedApprover().getId().equals(currentUser.getId())) {
                  throw new IllegalStateException("You are not the assigned approver for this request to reject");
