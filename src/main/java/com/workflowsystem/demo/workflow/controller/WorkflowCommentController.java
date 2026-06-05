@@ -14,7 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
+import java.util.List;
+
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +49,18 @@ public class WorkflowCommentController {
                 true,
                 "Comment added successfully",
                 response
+        );
+    }
+
+    @GetMapping("/{workflowRequestId}/comments")
+    @Operation(summary = "Get comments for a workflow request", description = "Retrieves all comments for a specific workflow request.")
+    public ApiResponse<List<WorkflowCommentResponse>> getComments(@PathVariable Long workflowRequestId, Authentication currentUser) {
+        List<WorkflowCommentResponse> comments = workflowCommentService.getCommentById(workflowRequestId, getCurrentUser(currentUser));
+
+        return new ApiResponse<>(
+                true,
+                "Comments retrieved successfully",
+                comments
         );
     }
 

@@ -6,4 +6,5 @@ import com.workflowsystem.demo.workflow.entity.WorkflowComment;
 
 public interface WorkflowCommentRepository extends JpaRepository<WorkflowComment, Long> {
     List<WorkflowComment> findByWorkflowRequestIdOrderByIdAsc(Long workflowRequestId);
+    
 }

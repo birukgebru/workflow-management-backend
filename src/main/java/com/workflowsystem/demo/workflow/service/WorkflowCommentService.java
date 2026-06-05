@@ -1,9 +1,12 @@
 package com.workflowsystem.demo.workflow.service;
 
+import java.util.List;
 import java.util.Objects;
 
+import org.hibernate.boot.registry.classloading.spi.ClassLoaderService.Work;
 import org.springframework.stereotype.Service;
 
+import com.workflowsystem.demo.audit.service.AuditLogService;
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.enums.Role;
 import com.workflowsystem.demo.shared.exception.InvalidWorkflowCommentException;
@@ -21,10 +24,15 @@ import jakarta.transaction.Transactional;
 public class WorkflowCommentService {
     private final WorkflowCommentRepository workflowCommentRepository;
     private final WorkflowRequestRepository workflowRequestRepository;
+    private final AuditLogService auditLogService;
 
-    public WorkflowCommentService(WorkflowCommentRepository workflowCommentRepository, WorkflowRequestRepository workflowRequestRepository) {
+    public WorkflowCommentService(
+        WorkflowCommentRepository workflowCommentRepository, 
+        WorkflowRequestRepository workflowRequestRepository,
+        AuditLogService auditLogService) {
         this.workflowCommentRepository = workflowCommentRepository;
         this.workflowRequestRepository = workflowRequestRepository;
+        this.auditLogService = auditLogService;
     }
 
     @Transactional
@@ -42,7 +50,29 @@ public class WorkflowCommentService {
         workflowComment.setCommenter(currentUser);
         WorkflowComment savedComment = workflowCommentRepository.save(workflowComment);
 
+        auditLogService.logAudit(
+            "ADDED_COMMENT", 
+            "Comment", 
+            savedComment.getId(), 
+            currentUser, "Added comment to workflow request"
+        );
+
         return WorkflowCommentMapper.toWorkflowCommentResponse(savedComment);
+    }
+
+    public List<WorkflowCommentResponse> getCommentById(Long workflowRequestId, User currentUser) {
+        WorkflowRequest request = workflowRequestRepository.findById(workflowRequestId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));    
+
+          if (!isAdmin(currentUser) && !isWorkflowParticipant(request, currentUser)) {
+            throw new InvalidWorkflowCommentException("You are not authorized to comment on this workflow request");
+        }
+
+        List<WorkflowComment> comments = workflowCommentRepository.findByWorkflowRequestIdOrderByIdAsc(request.getId());
+        return comments.stream()
+                .map(WorkflowCommentMapper::toWorkflowCommentResponse)
+                .toList();
+        
     }
 
 
