@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.workflowsystem.demo.audit.entitiy.AuditLog;
 import com.workflowsystem.demo.audit.repository.AuditLogRepository;
+import com.workflowsystem.demo.audit.service.AuditLogService;
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.enums.Role;
 import com.workflowsystem.demo.auth.repository.UserRepository;
-import com.workflowsystem.demo.shared.exception.InvalidWorkflowStateException;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowSubmitRequest;
@@ -33,18 +33,21 @@ public class WorkflowServiceImpl implements WorkflowService {
     private final AuditLogRepository auditLogRepository;
     private final UserRepository userRepository;
     private final WorkflowStateMachine workflowStateMachine;
+    private final AuditLogService auditLogService;
 
     public WorkflowServiceImpl(
             WorkflowRequestRepository workflowRequestRepository,
             WorkflowHistoryRepository workflowHistoryRepository,
             AuditLogRepository auditLogRepository,
             UserRepository userRepository,
-            WorkflowStateMachine workflowStateMachine) {
+            WorkflowStateMachine workflowStateMachine,
+            AuditLogService auditLogService) {
         this.workflowRequestRepository = workflowRequestRepository;
         this.workflowHistoryRepository = workflowHistoryRepository;
         this.auditLogRepository = auditLogRepository;
         this.userRepository = userRepository;
         this.workflowStateMachine = workflowStateMachine;
+        this.auditLogService = auditLogService;
     }
 
     @Override
@@ -65,7 +68,7 @@ public class WorkflowServiceImpl implements WorkflowService {
             savedWorkflowRequest.getSubmittedBy()
         );
 
-        logAudit(
+        auditLogService.logAudit(
                 "SUBMITTED",
                 "WorkflowRequest",
                 savedWorkflowRequest.getId(),
@@ -75,8 +78,6 @@ public class WorkflowServiceImpl implements WorkflowService {
         
         return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
     }
-
-    
 
     @Override
     @Transactional(readOnly = true)
@@ -132,7 +133,7 @@ public class WorkflowServiceImpl implements WorkflowService {
                 currentUser
         );
 
-        logAudit(
+        auditLogService.logAudit(
                 "REVIEWED",
                 "WorkflowRequest",
                 savedWorkflowRequest.getId(),
@@ -169,7 +170,7 @@ public class WorkflowServiceImpl implements WorkflowService {
                 currentUser
         );
 
-        logAudit(
+        auditLogService.logAudit(
                 "APPROVED",
                 "WorkflowRequest",
                 savedWorkflowRequest.getId(),
@@ -199,7 +200,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
         logWorkflowHistory(savedWorkflowRequest, previousStatus, savedWorkflowRequest.getStatus(), WorkflowAction.REJECTED, currentUser);
 
-        logAudit("REJECTED", "WorkflowRequest", savedWorkflowRequest.getId(), currentUser, "Workflow request rejected");
+        auditLogService.logAudit("REJECTED", "WorkflowRequest", savedWorkflowRequest.getId(), currentUser, "Workflow request rejected");
 
         return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
     }
@@ -237,7 +238,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflowRequest.setAssignedReviewer(reviewer);
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
 
-        logAudit(
+        auditLogService.logAudit(
                 "ASSIGNED_REVIEWER",
                 "WorkflowRequest",
                 savedWorkflowRequest.getId(),
@@ -270,7 +271,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflowRequest.setAssignedApprover(approver);
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
 
-        logAudit(
+        auditLogService.logAudit(
                 "ASSIGNED_APPROVER",
                 "WorkflowRequest",
                 savedWorkflowRequest.getId(),
@@ -296,22 +297,5 @@ public class WorkflowServiceImpl implements WorkflowService {
                 action
         );
         workflowHistoryRepository.save(workflowHistory);
-    }
-
-    private void logAudit(
-            String action,
-            String entityType,
-            Long entityId,
-            User performedBy,
-            String details
-    ) {
-        AuditLog auditLog = new AuditLog(
-                action,
-                entityType,
-                entityId,
-                performedBy,
-                details
-        );
-        auditLogRepository.save(auditLog);
     }
 }

@@ -10,12 +10,7 @@ import com.workflowsystem.demo.workflow.dto.WorkflowSubmitRequest;
 import com.workflowsystem.demo.workflow.enums.WorkflowStatus;
 
 public interface WorkflowService {
-    
-    WorkflowResponse submitRequest(
-        WorkflowSubmitRequest request,
-        User currentUser
-    );
-
+    WorkflowResponse submitRequest(WorkflowSubmitRequest request, User currentUser );
     List<WorkflowResponse> getMyRequests(User currentUser);
     List<WorkflowResponse> getRequestsByStatus(WorkflowStatus status);
     List<WorkflowResponse> getAllWorkflowRequests();
