@@ -9,7 +9,6 @@ import com.workflowsystem.demo.auth.enums.Role;
 import com.workflowsystem.demo.shared.exception.InvalidWorkflowCommentException;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.workflow.dto.WorkflowCommentResponse;
-import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
 import com.workflowsystem.demo.workflow.entity.WorkflowComment;
 import com.workflowsystem.demo.workflow.entity.WorkflowRequest;
 import com.workflowsystem.demo.workflow.mapper.WorkflowCommentMapper;
@@ -41,10 +40,7 @@ public class WorkflowCommentService {
         workflowComment.setWorkflowRequest(workflowRequest);
         workflowComment.setComment(comment);
         workflowComment.setCommenter(currentUser);
-
-       WorkflowComment savedComment = workflowCommentRepository.save(workflowComment);
-
-       
+        WorkflowComment savedComment = workflowCommentRepository.save(workflowComment);
 
         return WorkflowCommentMapper.toWorkflowCommentResponse(savedComment);
     }
@@ -58,12 +54,18 @@ public class WorkflowCommentService {
 
     private boolean isWorkflowParticipant(WorkflowRequest workflowRequest, User user) {
         Long userId = user.getId();
+        if(userId == null) {
+            return false;
+        }
         return hasUserId(workflowRequest.getAssignedApprover(), userId)
                 || hasUserId(workflowRequest.getAssignedReviewer(), userId)
                 || hasUserId(workflowRequest.getSubmittedBy(), userId);
     }
 
     private boolean hasUserId(User user, Long userId) {
+        if(user.getId() == null) {
+            return false;
+        }
         return user != null && Objects.equals(user.getId(), userId);
     }
 }
