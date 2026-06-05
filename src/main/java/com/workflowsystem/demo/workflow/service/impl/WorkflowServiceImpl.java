@@ -3,17 +3,17 @@ package com.workflowsystem.demo.workflow.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.hibernate.boot.registry.classloading.spi.ClassLoaderService.Work;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.workflowsystem.demo.audit.entitiy.AuditLog;
-import com.workflowsystem.demo.audit.repository.AuditLogRepository;
 import com.workflowsystem.demo.audit.service.AuditLogService;
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.enums.Role;
 import com.workflowsystem.demo.auth.repository.UserRepository;
+import com.workflowsystem.demo.auth.service.AuthService;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.workflow.dto.WorkflowDashboardResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
@@ -35,6 +35,8 @@ public class WorkflowServiceImpl implements WorkflowService {
     private final UserRepository userRepository;
     private final WorkflowStateMachine workflowStateMachine;
     private final AuditLogService auditLogService;
+    private static final Logger logger = LoggerFactory.getLogger(WorkflowServiceImpl.class);
+
 
     public WorkflowServiceImpl(
             WorkflowRequestRepository workflowRequestRepository,
@@ -58,7 +60,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflowRequest.setSubmittedBy(currentUser);
         workflowRequest.setStatus(WorkflowStatus.PENDING);
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
-
+        logger.info("Workflow request submitted by user {} with request ID {}", currentUser.getId(), savedWorkflowRequest.getId());
         logWorkflowHistory(
             savedWorkflowRequest,
             null,
@@ -124,6 +126,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
 
+        logger.info("Workflow request with ID {} marked under review by user {}", savedWorkflowRequest.getId(), currentUser.getId());
         logWorkflowHistory(
                 savedWorkflowRequest,
                 previousStatus,
@@ -161,6 +164,8 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflowRequest.setApprovedAt(LocalDateTime.now());
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
 
+        logger.info("Workflow request with ID {} approved by user {}", savedWorkflowRequest.getId(), currentUser.getId());
+
         logWorkflowHistory(
                 savedWorkflowRequest,
                 previousStatus,
@@ -197,6 +202,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflowRequest.setRejectedAt(LocalDateTime.now());
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
 
+        logger.info("Workflow request with ID {} rejected by user {}", savedWorkflowRequest.getId(), currentUser.getId());
         logWorkflowHistory(savedWorkflowRequest, previousStatus, savedWorkflowRequest.getStatus(), WorkflowAction.REJECTED, currentUser);
 
         auditLogService.logAudit("REJECTED", "WorkflowRequest", savedWorkflowRequest.getId(), currentUser, "Workflow request rejected");

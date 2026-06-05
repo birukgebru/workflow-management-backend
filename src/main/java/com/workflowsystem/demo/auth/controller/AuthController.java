@@ -21,6 +21,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
@@ -37,6 +40,7 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
     private final PasswordResetService passwordResetService;
     private final CurrentUserService currentUserService;
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     public AuthController(AuthService authService, RefreshTokenService refreshTokenService, PasswordResetService passwordResetService, CurrentUserService currentUserService) {
         this.authService = authService;
@@ -129,9 +133,10 @@ public class AuthController {
         description = "Generates a password reset token and sends it to the user's email"
     )
     public ApiResponse<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
-        String token = passwordResetService.generateResetToken(request.getEmail());
+        // String token = passwordResetService.generateResetToken(request.getEmail());
 
-        System.out.println("password reset token email sent: " + token);
+        // System.out.println("password reset token email sent: " + token);
+        logger.info("Password reset token generated for email: {}", request.getEmail());
 
         return new ApiResponse<>(
             true,

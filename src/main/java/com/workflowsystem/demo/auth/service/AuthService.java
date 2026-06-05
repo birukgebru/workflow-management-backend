@@ -1,6 +1,8 @@
 package com.workflowsystem.demo.auth.service;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
     private final RoleRepository roleRepository;
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, RefreshTokenService refreshTokenService, RoleRepository roleRepository) {
         this.userRepository = userRepository;
@@ -35,14 +38,17 @@ public class AuthService {
         this.roleRepository = roleRepository;
     }
 
-    public UserResponse register (RegisterRequest request) {
+    public UserResponse register(RegisterRequest request) {
+        logger.info("Registration attempt for email: {}", request.getEmail());
         if(userRepository.existsByEmail(request.getEmail())){
+            logger.warn("Registration failed. Email already exists: {}", request.getEmail());
             throw new ResourceNotFoundException("Email already exists");
         }
         if(userRepository.existsByUsername(request.getUsername())){
+            logger.warn("Registration failed. Username already taken: {}", request.getUsername());
             throw new ResourceNotFoundException("Username already taken");
         }
-        
+        logger.info("Registration details for email: {}", request.getEmail());
         User user = new User();
 
         user.setUsername(request.getUsername());
@@ -59,16 +65,19 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest request) {
+        logger.info("Login attempt for email: {}", request.getEmail());
         User user = userRepository.findByEmail(request.getEmail())
             .orElseThrow( () -> new AuthenticationException("Invalid email or password")); 
 
         if (!user.isEnabled()) {
+            logger.warn("Login failed. Account is disabled: {}", request.getEmail());
             throw new AuthenticationException("Account is disabled");
         }
 
         boolean passwordMatches = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if(!passwordMatches){
+            logger.warn("Login failed. Invalid credentials for email: {}", request.getEmail());
             throw new AuthenticationException("Invalid credentials");
         }
 
@@ -86,6 +95,8 @@ public class AuthService {
     }
 
     public LoginResponse refreshToken(RefreshTokenRequest request){
+        logger.info("Refresh token request received");
+
         RefreshToken refreshToken = refreshTokenService.findByToken(request.getRefreshToken())
                                     .orElseThrow(()->
                                         new AuthenticationException("Invalid Refresh token")
@@ -98,7 +109,7 @@ public class AuthService {
         if(refreshToken.isRevoked()){
             throw new AuthenticationException("Refresh token revoked");
         }
-      
+        logger.info("Refresh token is valid for user: {}", refreshToken.getUser().getEmail());
 
         User user = refreshToken.getUser();
 

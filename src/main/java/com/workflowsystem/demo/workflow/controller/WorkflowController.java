@@ -111,7 +111,7 @@ public class WorkflowController {
         );
     }
 
-    @GetMapping("/Dashboard") 
+    @GetMapping("/dashboard") 
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(
         summary = "Get workflow requests information",

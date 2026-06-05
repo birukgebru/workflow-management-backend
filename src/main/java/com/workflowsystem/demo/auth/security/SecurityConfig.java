@@ -28,6 +28,9 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
+                    "/actuator/**"
+                ).hasRole("ADMIN")
+                .requestMatchers(
                     "/auth/register",
                     "/auth/login",
                     "/auth/refresh",
