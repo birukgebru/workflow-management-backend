@@ -3,6 +3,7 @@ package com.workflowsystem.demo.workflow.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.boot.registry.classloading.spi.ClassLoaderService.Work;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.enums.Role;
 import com.workflowsystem.demo.auth.repository.UserRepository;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
+import com.workflowsystem.demo.workflow.dto.WorkflowDashboardResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowSubmitRequest;
 import com.workflowsystem.demo.workflow.entity.WorkflowHistory;
@@ -30,7 +32,6 @@ import com.workflowsystem.demo.workflow.state.WorkflowStateMachine;
 public class WorkflowServiceImpl implements WorkflowService {
     private final WorkflowRequestRepository workflowRequestRepository;
     private final WorkflowHistoryRepository workflowHistoryRepository;
-    private final AuditLogRepository auditLogRepository;
     private final UserRepository userRepository;
     private final WorkflowStateMachine workflowStateMachine;
     private final AuditLogService auditLogService;
@@ -38,13 +39,11 @@ public class WorkflowServiceImpl implements WorkflowService {
     public WorkflowServiceImpl(
             WorkflowRequestRepository workflowRequestRepository,
             WorkflowHistoryRepository workflowHistoryRepository,
-            AuditLogRepository auditLogRepository,
             UserRepository userRepository,
             WorkflowStateMachine workflowStateMachine,
             AuditLogService auditLogService) {
         this.workflowRequestRepository = workflowRequestRepository;
         this.workflowHistoryRepository = workflowHistoryRepository;
-        this.auditLogRepository = auditLogRepository;
         this.userRepository = userRepository;
         this.workflowStateMachine = workflowStateMachine;
         this.auditLogService = auditLogService;
@@ -280,6 +279,21 @@ public class WorkflowServiceImpl implements WorkflowService {
         );
 
         return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
+    }
+
+    @Override
+    public WorkflowDashboardResponse getDashboardInfo(User currentUser) {
+
+        WorkflowDashboardResponse WorkflowDashboardResponse = new WorkflowDashboardResponse(
+                workflowRequestRepository.countAll(),
+                workflowRequestRepository.countByStatus(WorkflowStatus.PENDING),
+                workflowRequestRepository.countByStatus(WorkflowStatus.UNDER_REVIEW),
+                workflowRequestRepository.countByStatus(WorkflowStatus.APPROVED),
+                workflowRequestRepository.countByStatus(WorkflowStatus.REJECTED)
+        );
+        return WorkflowDashboardResponse;
+        
+
     }
 
     private void logWorkflowHistory(

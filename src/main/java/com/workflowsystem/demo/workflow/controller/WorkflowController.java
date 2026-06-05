@@ -11,6 +11,7 @@ import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.repository.UserRepository;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.shared.response.ApiResponse;
+import com.workflowsystem.demo.workflow.dto.WorkflowDashboardResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowHistoryResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowSubmitRequest;
@@ -110,7 +111,22 @@ public class WorkflowController {
         );
     }
 
+    @GetMapping("/Dashboard") 
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+        summary = "Get workflow requests information",
+        description = "Retrieves workflow information for the authenticated user"
+    )
 
+    public ApiResponse<WorkflowDashboardResponse> getDashboard(Authentication authentication) {
+        User currentUser = getCurrentUser(authentication);
+        WorkflowDashboardResponse dashboardResponse = workflowService.getDashboardInfo(currentUser);
+        return new ApiResponse<>(
+            true,
+            "Dashboard information retrieved",
+            dashboardResponse
+        );
+    }
 
     @GetMapping("/my-requests")
     @Operation(
