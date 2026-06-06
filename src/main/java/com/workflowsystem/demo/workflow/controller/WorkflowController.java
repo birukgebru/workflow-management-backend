@@ -2,6 +2,7 @@ package com.workflowsystem.demo.workflow.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -185,8 +186,11 @@ public class WorkflowController {
         summary = "Get All Workflow requests",
         description = "Retrieves a list of all workflow requests"
     )
-    public ApiResponse<List<WorkflowResponse>> getAllWorkflowRequests() {
-        List<WorkflowResponse> workflowResponses = workflowService.getAllWorkflowRequests();
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<Page<WorkflowResponse>> getAllWorkflowRequests(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<WorkflowResponse> workflowResponses = workflowService.getAllWorkflowRequests(page, size);
         return new ApiResponse<>(
                 true,
                 "All workflow requests retrieved",

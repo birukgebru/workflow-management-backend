@@ -5,6 +5,10 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +17,6 @@ import com.workflowsystem.demo.audit.service.AuditLogService;
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.enums.Role;
 import com.workflowsystem.demo.auth.repository.UserRepository;
-import com.workflowsystem.demo.auth.service.AuthService;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.workflow.dto.WorkflowDashboardResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
@@ -82,11 +85,11 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<WorkflowResponse> getAllWorkflowRequests() {
-        return workflowRequestRepository.findAllByOrderByCreatedAtDesc()
-                .stream()
-                .map(WorkflowRequestMapper::toWorkflowResponse)
-                .toList();
+    public Page<WorkflowResponse> getAllWorkflowRequests(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<WorkflowRequest> workflowRequests = workflowRequestRepository.findAllByOrderByCreatedAtDesc(pageable);
+
+        return workflowRequests.map(WorkflowRequestMapper::toWorkflowResponse);
     }
 
     @Override
@@ -153,7 +156,6 @@ public class WorkflowServiceImpl implements WorkflowService {
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
         WorkflowStatus previousStatus = workflowRequest.getStatus();
         workflowStateMachine.validateTransition(previousStatus, WorkflowStatus.APPROVED);
-
 
         if(workflowRequest.getAssignedApprover() == null || !workflowRequest.getAssignedApprover().getId().equals(currentUser.getId())) {
             throw new IllegalStateException("You are not the assigned approver for this request");

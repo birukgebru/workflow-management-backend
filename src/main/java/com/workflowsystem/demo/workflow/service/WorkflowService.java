@@ -2,6 +2,7 @@ package com.workflowsystem.demo.workflow.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.lang.NonNull;
 
 import com.workflowsystem.demo.auth.entity.User;
@@ -14,7 +15,7 @@ public interface WorkflowService {
     WorkflowResponse submitRequest(WorkflowSubmitRequest request, User currentUser );
     List<WorkflowResponse> getMyRequests(User currentUser);
     List<WorkflowResponse> getRequestsByStatus(WorkflowStatus status);
-    List<WorkflowResponse> getAllWorkflowRequests();
+    Page<WorkflowResponse> getAllWorkflowRequests(int page, int size);
     WorkflowResponse getRequestById(Long id); 
     WorkflowResponse reviewRequest(@NonNull Long requestId, User currentUser);
     WorkflowResponse approveRequest(@NonNull Long requestId, User currentUser);
