@@ -110,6 +110,30 @@ public class WorkflowServiceImpl implements WorkflowService {
     }
 
     @Override
+    @Transactional(readOnly = true) 
+    public Page<WorkflowResponse> getRequestsByReviewer(Long reviewerId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<WorkflowRequest> workflowRequests = workflowRequestRepository.findByAssignedReviewerId(reviewerId, pageable);
+        return workflowRequests.map(WorkflowRequestMapper::toWorkflowResponse);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<WorkflowResponse> getRequestsByApprover(Long approverId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<WorkflowRequest> workflowRequests = workflowRequestRepository.findByAssignedApproverId(approverId, pageable);
+        return workflowRequests.map(WorkflowRequestMapper::toWorkflowResponse);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<WorkflowResponse> getRequestsBySubmitter(Long submittedById, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<WorkflowRequest> workflowRequests = workflowRequestRepository.findBySubmittedById(submittedById, pageable);
+        return workflowRequests.map(WorkflowRequestMapper::toWorkflowResponse);
+}
+
+    @Override
     @Transactional
     public WorkflowResponse reviewRequest(@NonNull Long requestId, User currentUser) {
         WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)

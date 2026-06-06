@@ -163,6 +163,58 @@ public class WorkflowController {
             workflowResponses
         );
     }
+
+    // TODO: add endpoint to get workflow requests by assigned reviewer. This will be useful for reviewers to see the requests assigned to them.
+    @GetMapping("/reviewer/{reviewerId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+        summary = "Get workflow requests by reviewer",
+        description = "Retrieves a list of workflow requests assigned to a specific reviewer"
+    )
+    public ApiResponse<Page<WorkflowResponse>> getRequestByReviewer(@PathVariable Long reviewerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<WorkflowResponse> workflowResponses = workflowService.getRequestsByReviewer(reviewerId, page, size);
+        return new ApiResponse<>(
+            true,
+            "requests by reviewer",
+            workflowResponses
+        );
+    }
+
+    @GetMapping("/approver/{approverId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+        summary = "Get workflow requests by approver",
+        description = "Retrieves a list of workflow requests assigned to a specific approver"
+    )
+    public ApiResponse<Page<WorkflowResponse>> getRequestByApprover(@PathVariable Long approverId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<WorkflowResponse> workflowResponses = workflowService.getRequestsByApprover(approverId, page, size);
+        return new ApiResponse<>(
+            true,
+            "requests by approver",
+            workflowResponses
+        );
+    }
+
+    @GetMapping("/submitter/{submitterId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+        summary = "Get workflow requests by submitter",
+        description = "Retrieves a list of workflow requests submitted by a specific user"
+    )
+    public ApiResponse<Page<WorkflowResponse>> getRequestBySubmitter(@PathVariable Long submitterId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<WorkflowResponse> workflowResponses = workflowService.getRequestsBySubmitter(submitterId, page, size);
+        return new ApiResponse<>(
+            true,
+            "requests by submitter",
+            workflowResponses
+        );
+    }
     
     @GetMapping("/{id}/history")
     @PreAuthorize("hasAnyRole('APPROVER', 'ADMIN')")
