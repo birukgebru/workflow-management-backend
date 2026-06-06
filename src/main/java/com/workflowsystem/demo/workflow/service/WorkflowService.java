@@ -14,7 +14,7 @@ import com.workflowsystem.demo.workflow.enums.WorkflowStatus;
 public interface WorkflowService {
     WorkflowResponse submitRequest(WorkflowSubmitRequest request, User currentUser );
     List<WorkflowResponse> getMyRequests(User currentUser);
-    List<WorkflowResponse> getRequestsByStatus(WorkflowStatus status);
+    Page<WorkflowResponse> getRequestsByStatus(WorkflowStatus status, int page, int size);
     Page<WorkflowResponse> getAllWorkflowRequests(int page, int size);
     WorkflowResponse getRequestById(Long id); 
     WorkflowResponse reviewRequest(@NonNull Long requestId, User currentUser);

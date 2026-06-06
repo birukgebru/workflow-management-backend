@@ -13,7 +13,7 @@ import com.workflowsystem.demo.auth.entity.User;
 
 public interface WorkflowRequestRepository extends JpaRepository<WorkflowRequest, Long>{
     List<WorkflowRequest> findBySubmittedByOrderByCreatedAtDesc(User user);
-    List<WorkflowRequest> findByStatusOrderByCreatedAtDesc(WorkflowStatus status);
+    Page<WorkflowRequest> findByStatusOrderByCreatedAtDesc(WorkflowStatus status, Pageable pageable);
     Page<WorkflowRequest> findAllByOrderByCreatedAtDesc(Pageable pageable);
     @Query("SELECT COUNT(w) FROM WorkflowRequest w")
     Long countAll();

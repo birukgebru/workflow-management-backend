@@ -152,8 +152,11 @@ public class WorkflowController {
         summary = "Get workflow requests by status",
         description = "Retrieves a list of workflow requests based on their status"
     )
-    public ApiResponse<List<WorkflowResponse>> getRequestByStatus(@PathVariable WorkflowStatus status) {
-        List<WorkflowResponse> workflowResponses = workflowService.getRequestsByStatus(status);
+    public ApiResponse<Page<WorkflowResponse>> getRequestByStatus(@PathVariable WorkflowStatus status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<WorkflowResponse> workflowResponses = workflowService.getRequestsByStatus(status, page, size);
         return new ApiResponse<>(
             true,
             "requests by status",

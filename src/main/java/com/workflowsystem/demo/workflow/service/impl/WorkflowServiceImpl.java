@@ -103,11 +103,10 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<WorkflowResponse> getRequestsByStatus(WorkflowStatus status){
-        return workflowRequestRepository.findByStatusOrderByCreatedAtDesc(status)
-                .stream()
-                .map(WorkflowRequestMapper::toWorkflowResponse)
-                .toList();
+    public Page<WorkflowResponse> getRequestsByStatus(WorkflowStatus status, int page, int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<WorkflowRequest> workflowRequests = workflowRequestRepository.findByStatusOrderByCreatedAtDesc(status, pageable);
+        return workflowRequests.map(WorkflowRequestMapper::toWorkflowResponse);
     }
 
     @Override
