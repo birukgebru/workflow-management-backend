@@ -16,6 +16,7 @@ import com.workflowsystem.demo.workflow.dto.WorkflowDashboardResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowHistoryResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowSubmitRequest;
+import com.workflowsystem.demo.workflow.entity.WorkflowRequest;
 import com.workflowsystem.demo.workflow.enums.WorkflowStatus;
 import com.workflowsystem.demo.workflow.mapper.WorkflowHistoryMapper;
 import com.workflowsystem.demo.workflow.repository.WorkflowHistoryRepository;
@@ -160,6 +161,19 @@ public class WorkflowController {
         return new ApiResponse<>(
             true,
             "requests by status",
+            workflowResponses
+        );
+    }
+
+    @GetMapping("/search/{keyword}")
+    public ApiResponse<Page<WorkflowResponse>> getRequestByTitle(@PathVariable String keyword, 
+        @RequestParam(defaultValue = "0") int page, 
+        @RequestParam(defaultValue = "10") int size
+    ){
+        Page<WorkflowResponse> workflowResponses = workflowService.getRequestsByTitle(keyword, page, size);
+        return new ApiResponse<>(
+            true,
+            "Search results by title",
             workflowResponses
         );
     }

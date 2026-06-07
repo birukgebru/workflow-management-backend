@@ -110,6 +110,14 @@ public class WorkflowServiceImpl implements WorkflowService {
     }
 
     @Override
+    @Transactional
+    public Page<WorkflowResponse> getRequestsByTitle(String keyword, int page, int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<WorkflowRequest> workflowRequests = workflowRequestRepository.findByTitleContainingIgnoreCase(keyword, pageable);
+        return workflowRequests.map(WorkflowRequestMapper::toWorkflowResponse);
+    }
+
+    @Override
     @Transactional(readOnly = true) 
     public Page<WorkflowResponse> getRequestsByReviewer(Long reviewerId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());

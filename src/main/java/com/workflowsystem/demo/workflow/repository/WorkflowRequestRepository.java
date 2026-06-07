@@ -17,7 +17,8 @@ public interface WorkflowRequestRepository extends JpaRepository<WorkflowRequest
     Page<WorkflowRequest> findAllByOrderByCreatedAtDesc(Pageable pageable);
     Page<WorkflowRequest> findByAssignedReviewerId(Long reviewerId, Pageable pageable);
     Page<WorkflowRequest> findByAssignedApproverId(Long approvedBy, Pageable pageable);
-    Page<WorkflowRequest> findBySubmittedById(Long submittedById, Pageable pageable);
+    Page<WorkflowRequest> findBySubmittedById(Long submittedById, Pageable pageable); 
+    Page<WorkflowRequest> findByTitleContainingIgnoreCase(String keyword, Pageable pageable);
     @Query("SELECT COUNT(w) FROM WorkflowRequest w")
     Long countAll();
     Long countByStatus(WorkflowStatus status);
