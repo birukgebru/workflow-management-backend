@@ -178,6 +178,16 @@ public class WorkflowController {
         );
     }
 
+    @GetMapping("/search")
+    public ApiResponse<Page<WorkflowResponse>> search(@RequestParam String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
+        Page<WorkflowResponse> workflowResponses = workflowService.getRequestsByTitleOrDescription(keyword, page, size);
+        return new ApiResponse<>(
+            true,
+            "Search results by title",
+            workflowResponses
+        );
+    }
+
     // TODO: add endpoint to get workflow requests by assigned reviewer. This will be useful for reviewers to see the requests assigned to them.
     @GetMapping("/reviewer/{reviewerId}")
     @PreAuthorize("hasRole('ADMIN')")
