@@ -179,6 +179,11 @@ public class WorkflowController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @Operation(
+        summary = "Search workflow requests by title or description",
+        description = "Retrieves a list of workflow requests filtered by title or description"
+    )
     public ApiResponse<Page<WorkflowResponse>> search(@RequestParam String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
         Page<WorkflowResponse> workflowResponses = workflowService.getRequestsByTitleOrDescription(keyword, page, size);
         return new ApiResponse<>(
