@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriUtils;
 
-import com.workflowsystem.demo.file.dto.AttachmentRequest;
 import com.workflowsystem.demo.file.dto.AttachmentResponse;
 import com.workflowsystem.demo.file.entity.Attachment;
 import com.workflowsystem.demo.file.repository.AttachmentRepository;
@@ -23,6 +22,8 @@ import com.workflowsystem.demo.workflow.repository.WorkflowRequestRepository;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.lang.NonNull;
 
 import java.nio.charset.StandardCharsets;
@@ -32,6 +33,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/workflow")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(
+    name = "Workflow Attachments Management",
+    description = "Endpoints for managing workflow attachments"
+)
 public class AttachmentController {
 
     private final FileStorageService fileStorageService;
@@ -100,35 +105,35 @@ public class AttachmentController {
                 .body(resource);
     }
 
-    // @GetMapping("/{workflowId}/attachments")
-    // @PreAuthorize("isAuthenticated()")
-    // @Operation(
-    //     summary = "List workflow attachments",
-    //     description = "Get all attachments for a workflow request"
-    // )
-    // public ApiResponse<List<AttachmentResponse>> getAttachments(@PathVariable Long workflowId) {
+    //TODO: make sure appropriate role is accessing the file. also do the same for uploading attachments 
+    @GetMapping("/{workflowId}/attachments")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(
+        summary = "List workflow attachments",
+        description = "Get all attachments for a workflow request"
+    )
+    public ApiResponse<List<AttachmentResponse>> getAttachments(@PathVariable Long workflowId) {
 
-    //     WorkflowRequest workflowRequest = workflowRequestRepository.findById(workflowId)
-    //                     .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
+        WorkflowRequest workflowRequest = workflowRequestRepository.findById(workflowId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
+        List<AttachmentResponse> attachments = attachmentRepository
+                        .findByWorkflowRequestId(workflowRequest.getId())
+                        .stream()
+                        .map(attachment -> {
+                            String downloadUrl = ServletUriComponentsBuilder
+                                            .fromCurrentContextPath()
+                                            .path("/workflow/attachments/")
+                                            .path(attachment.getId().toString())
+                                            .toUriString();
 
-    //     List<AttachmentResponse> attachments = attachmentRepository
-    //                     .findByWorkflowRequestId(workflowRequest.getId())
-    //                     .stream()
-    //                     .map(attachment -> {
-    //                         String downloadUrl = ServletUriComponentsBuilder
-    //                                         .fromCurrentContextPath()
-    //                                         .path("/workflow/attachments/")
-    //                                         .path(attachment.getId().toString())
-    //                                         .toUriString();
+                            return AttachmentResponse.fromAttachment(attachment, downloadUrl);
+                        })
+                        .toList();
 
-    //                         return AttachmentResponse.fromAttachment(attachment, downloadUrl);
-    //                     })
-    //                     .toList();
-
-    //     return new ApiResponse<>(
-    //             true,
-    //             "Attachments retrieved successfully",
-    //             attachments
-    //     );
-    // }
+        return new ApiResponse<>(
+                true,
+                "Attachments retrieved successfully",
+                attachments
+        );
+    }
 }
