@@ -77,30 +77,28 @@ public class AttachmentController {
         );
     }
 
-    // @GetMapping("/attachments/{attachmentId}")
-    // @PreAuthorize("isAuthenticated()")
-    // @Operation(
-    //     summary = "Download attachment",
-    //     description = "Download an attachment by id"
-    // )
-    // public ResponseEntity<Resource> downloadAttachment(
-    //         @PathVariable Long attachmentId) {
+    @GetMapping("/attachments/{attachmentId}")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(
+        summary = "Download attachment",
+        description = "Download an attachment by id"
+    )
+    public ResponseEntity<Resource> downloadAttachment(@PathVariable Long attachmentId) {
 
-    //     Attachment attachment = fileStorageService.findById(attachmentId);
+        Attachment attachment = fileStorageService.findById(attachmentId);
+        Resource resource = fileStorageService.load(attachmentId);
 
-    //     Resource resource = fileStorageService.load(attachmentId);
-
-    //     return ResponseEntity.ok()
-    //             .contentType(MediaType.parseMediaType(attachment.getContentType()))
-    //             .header(
-    //                     HttpHeaders.CONTENT_DISPOSITION, "attachment; 
-    //                     filename=\"" + UriUtils.encode(
-    //                                     attachment.getFileName(),
-    //                                     StandardCharsets.UTF_8
-    //                             ) + "\""
-    //             )
-    //             .body(resource);
-    // }
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(attachment.getContentType()))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION, 
+                        "attachment; filename=\"" + UriUtils.encode(
+                                        attachment.getFileName(),
+                                        StandardCharsets.UTF_8
+                                ) + "\""
+                )
+                .body(resource);
+    }
 
     // @GetMapping("/{workflowId}/attachments")
     // @PreAuthorize("isAuthenticated()")
