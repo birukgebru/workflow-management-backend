@@ -18,8 +18,11 @@ import com.workflowsystem.demo.audit.service.AuditLogService;
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.enums.Role;
 import com.workflowsystem.demo.auth.repository.UserRepository;
+import com.workflowsystem.demo.notification.event.ApproverAssignedEvent;
+import com.workflowsystem.demo.notification.event.ReviewerAssignedEvent;
+import com.workflowsystem.demo.notification.event.WorkflowApprovedEvent;
+import com.workflowsystem.demo.notification.event.WorkflowRejectedEvent;
 import com.workflowsystem.demo.notification.event.WorkflowSubmittedEvent;
-import com.workflowsystem.demo.notification.service.NotificationService;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.workflow.dto.WorkflowDashboardResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
@@ -41,10 +44,8 @@ public class WorkflowServiceImpl implements WorkflowService {
     private final UserRepository userRepository;
     private final WorkflowStateMachine workflowStateMachine;
     private final AuditLogService auditLogService;
-    private final NotificationService notificationService;
     private final ApplicationEventPublisher eventPublisher;
     private static final Logger logger = LoggerFactory.getLogger(WorkflowServiceImpl.class);
-
 
     public WorkflowServiceImpl(
             WorkflowRequestRepository workflowRequestRepository,
@@ -52,7 +53,6 @@ public class WorkflowServiceImpl implements WorkflowService {
             UserRepository userRepository,
             WorkflowStateMachine workflowStateMachine,
             AuditLogService auditLogService, 
-            NotificationService notificationService,
             ApplicationEventPublisher eventPublisher
         ) {
         this.workflowRequestRepository = workflowRequestRepository;
@@ -60,7 +60,6 @@ public class WorkflowServiceImpl implements WorkflowService {
         this.userRepository = userRepository;
         this.workflowStateMachine = workflowStateMachine;
         this.auditLogService = auditLogService;
-        this.notificationService = notificationService;
         this.eventPublisher = eventPublisher;
     }
 
@@ -217,10 +216,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflowRequest.setApprovedBy(currentUser);
         workflowRequest.setApprovedAt(LocalDateTime.now());
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
-
-        //TODO get email 
-        String requesterE = "biruk.gebru28@gmail.com";
-        notificationService.sendEmail(requesterE,"Request Approved", "Your request has been approved");
+        
         logger.info("Workflow request with ID {} approved by user {}", savedWorkflowRequest.getId(), currentUser.getId());
 
         logWorkflowHistory(
@@ -238,6 +234,10 @@ public class WorkflowServiceImpl implements WorkflowService {
                 currentUser,
                 "Workflow request approved"
         );
+
+        //TODO get email 
+        String requesterE = "biruk.gebru28@gmail.com";
+        eventPublisher.publishEvent(new WorkflowApprovedEvent(savedWorkflowRequest.getId(), requesterE));
 
         return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
     }
@@ -259,25 +259,21 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflowRequest.setRejectedAt(LocalDateTime.now());
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
 
-         //TODO: get email 
-         //Instead of directly calling NotificationService everywhere, create domain events.
-        String requesterE = "biruk.gebru28@gmail.com";
-        notificationService.sendEmail(requesterE,"Request Rejected", "Your request has been rejected");
         logger.info("Workflow request with ID {} rejected by user {}", savedWorkflowRequest.getId(), currentUser.getId());
         logWorkflowHistory(savedWorkflowRequest, previousStatus, savedWorkflowRequest.getStatus(), WorkflowAction.REJECTED, currentUser);
         auditLogService.logAudit("REJECTED", "WorkflowRequest", savedWorkflowRequest.getId(), currentUser, "Workflow request rejected");
 
+        //TODO get email 
+        String requesterE = "biruk.gebru28@gmail.com";
+        eventPublisher.publishEvent(new WorkflowRejectedEvent(savedWorkflowRequest.getId(), requesterE));
         return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
     }
 
     @Override
     @Transactional(readOnly = true)
     public WorkflowResponse getRequestById(Long id) {
-        WorkflowRequest workflowRequest =
-                workflowRequestRepository.findById(id)
-                        .orElseThrow(() ->
-                                new ResourceNotFoundException(
-                                        "Workflow request not found"));
+        WorkflowRequest workflowRequest = workflowRequestRepository.findById(id)
+                                            .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
 
         return WorkflowRequestMapper.toWorkflowResponse(workflowRequest);
     }
@@ -300,15 +296,9 @@ public class WorkflowServiceImpl implements WorkflowService {
         }
         workflowRequest.setAssignedReviewer(reviewer);
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
-        notificationService.sendEmail(reviewer.getEmail(),"Workflow Assigned", "You have been assigned a workflow");
-        auditLogService.logAudit(
-                "ASSIGNED_REVIEWER",
-                "WorkflowRequest",
-                savedWorkflowRequest.getId(),
-                currentUser,
-                "Assigned reviewer with ID " + reviewerId
-        );
-
+        auditLogService.logAudit("ASSIGNED_REVIEWER", "WorkflowRequest", savedWorkflowRequest.getId(), currentUser, "Assigned reviewer with ID " + reviewerId);
+        eventPublisher.publishEvent(new ReviewerAssignedEvent(savedWorkflowRequest.getId(), reviewer.getEmail()));
+        
         return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
     }
 
@@ -321,10 +311,8 @@ public class WorkflowServiceImpl implements WorkflowService {
                 .orElseThrow(() -> new ResourceNotFoundException("Approver not found"));
 
         boolean hasApproverRole = approver.getRoles()
-                .stream()                
-                .anyMatch(
-                    r -> r.getName() == Role.ROLE_APPROVER
-                );
+                                          .stream()        
+                                          .anyMatch(r -> r.getName() == Role.ROLE_APPROVER);
 
         if(!hasApproverRole){
             throw new IllegalArgumentException("User is not an approver");
@@ -332,7 +320,6 @@ public class WorkflowServiceImpl implements WorkflowService {
 
         workflowRequest.setAssignedApprover(approver);
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
-        notificationService.sendEmail(approver.getEmail(),"Workflow Assigned","You have been assigned a workflow");
         auditLogService.logAudit(
                 "ASSIGNED_APPROVER",
                 "WorkflowRequest",
@@ -340,6 +327,8 @@ public class WorkflowServiceImpl implements WorkflowService {
                 currentUser,
                 "Assigned approver with ID " + approverId
         );
+
+        eventPublisher.publishEvent(new ApproverAssignedEvent(savedWorkflowRequest.getId(), approver.getEmail()));
 
         return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
     }

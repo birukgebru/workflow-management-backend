@@ -403,3 +403,105 @@ Message: Workflow #12 has been submitted successfully.
 2026-06-09T21:00:34.189+03:00  INFO 5056 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2026-06-09T21:00:34.193+03:00  INFO 5056 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2026-06-09T21:00:34.199+03:00  INFO 5056 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-06-09T21:23:41.177+03:00  INFO 6108 --- [main] c.workflowsystem.demo.DemoApplication    : Starting DemoApplication using Java 17.0.18 with PID 6108 (D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend\target\classes started by Administrator in D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend)
+2026-06-09T21:23:41.180+03:00 DEBUG 6108 --- [main] c.workflowsystem.demo.DemoApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-06-09T21:23:41.180+03:00  INFO 6108 --- [main] c.workflowsystem.demo.DemoApplication    : The following 1 profile is active: "dev"
+2026-06-09T21:23:43.053+03:00  INFO 6108 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-09T21:23:43.235+03:00  INFO 6108 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 170 ms. Found 9 JPA repository interfaces.
+2026-06-09T21:23:44.602+03:00  INFO 6108 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-09T21:23:44.619+03:00  INFO 6108 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-09T21:23:44.619+03:00  INFO 6108 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-06-09T21:23:44.741+03:00  INFO 6108 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-09T21:23:44.748+03:00  INFO 6108 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3491 ms
+2026-06-09T21:23:45.213+03:00  INFO 6108 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-09T21:23:45.341+03:00  INFO 6108 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-06-09T21:23:45.395+03:00  INFO 6108 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-09T21:23:45.718+03:00  INFO 6108 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-09T21:23:45.767+03:00  INFO 6108 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-09T21:23:46.130+03:00  INFO 6108 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6159fb3c
+2026-06-09T21:23:46.130+03:00  INFO 6108 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-09T21:23:46.195+03:00  WARN 6108 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-09T21:23:48.192+03:00  INFO 6108 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-09T21:23:48.545+03:00  INFO 6108 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-09T21:23:49.257+03:00 DEBUG 6108 --- [main] c.w.d.a.s.JwtAuthenticationFilter        : Filter 'jwtAuthenticationFilter' configured for use
+2026-06-09T21:23:49.659+03:00  INFO 6108 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-09T21:23:50.480+03:00  WARN 6108 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-09T21:23:51.273+03:00  INFO 6108 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
+2026-06-09T21:23:51.413+03:00  INFO 6108 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@44b860b1, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@793937ec, org.springframework.security.web.context.SecurityContextHolderFilter@2a71d430, org.springframework.security.web.header.HeaderWriterFilter@3e1596c3, org.springframework.web.filter.CorsFilter@3f27a95b, org.springframework.security.web.authentication.logout.LogoutFilter@6878cd83, com.workflowsystem.demo.auth.security.JwtAuthenticationFilter@5a02fca5, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@14021c10, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@ff7042c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1913188a, org.springframework.security.web.session.SessionManagementFilter@9e7d82e, org.springframework.security.web.access.ExceptionTranslationFilter@6cd7d05, org.springframework.security.web.access.intercept.AuthorizationFilter@52c4bf29]
+2026-06-09T21:23:52.290+03:00  INFO 6108 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-06-09T21:23:52.323+03:00  INFO 6108 --- [main] c.workflowsystem.demo.DemoApplication    : Started DemoApplication in 12.015 seconds (process running for 12.669)
+2026-06-09T21:28:54.213+03:00  INFO 6108 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-09T21:28:54.223+03:00  INFO 6108 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-06-09T21:28:54.240+03:00  INFO 6108 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-06-09T21:29:07.218+03:00  INFO 15604 --- [main] c.workflowsystem.demo.DemoApplication    : Starting DemoApplication using Java 17.0.18 with PID 15604 (D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend\target\classes started by Administrator in D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend)
+2026-06-09T21:29:07.218+03:00 DEBUG 15604 --- [main] c.workflowsystem.demo.DemoApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-06-09T21:29:07.223+03:00  INFO 15604 --- [main] c.workflowsystem.demo.DemoApplication    : The following 1 profile is active: "dev"
+2026-06-09T21:29:08.886+03:00  INFO 15604 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-09T21:29:09.040+03:00  INFO 15604 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 143 ms. Found 9 JPA repository interfaces.
+2026-06-09T21:29:10.219+03:00  INFO 15604 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-09T21:29:10.249+03:00  INFO 15604 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-09T21:29:10.252+03:00  INFO 15604 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-06-09T21:29:10.378+03:00  INFO 15604 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-09T21:29:10.378+03:00  INFO 15604 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3079 ms
+2026-06-09T21:29:10.822+03:00  INFO 15604 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-09T21:29:10.935+03:00  INFO 15604 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-06-09T21:29:10.984+03:00  INFO 15604 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-09T21:29:11.315+03:00  INFO 15604 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-09T21:29:11.356+03:00  INFO 15604 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-09T21:29:11.715+03:00  INFO 15604 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6fefc5ea
+2026-06-09T21:29:11.725+03:00  INFO 15604 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-09T21:29:11.779+03:00  WARN 15604 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-09T21:29:13.501+03:00  INFO 15604 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-09T21:29:13.826+03:00  INFO 15604 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-09T21:29:14.430+03:00 DEBUG 15604 --- [main] c.w.d.a.s.JwtAuthenticationFilter        : Filter 'jwtAuthenticationFilter' configured for use
+2026-06-09T21:29:14.819+03:00  INFO 15604 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-09T21:29:15.580+03:00  WARN 15604 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-09T21:29:16.341+03:00  INFO 15604 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
+2026-06-09T21:29:16.468+03:00  INFO 15604 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@33f2ac11, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@44b860b1, org.springframework.security.web.context.SecurityContextHolderFilter@13ae0ffd, org.springframework.security.web.header.HeaderWriterFilter@7452e4ec, org.springframework.web.filter.CorsFilter@793937ec, org.springframework.security.web.authentication.logout.LogoutFilter@68032a80, com.workflowsystem.demo.auth.security.JwtAuthenticationFilter@194a653d, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@30769e7a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@bf6de66, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3f27a95b, org.springframework.security.web.session.SessionManagementFilter@1d957b5a, org.springframework.security.web.access.ExceptionTranslationFilter@649df002, org.springframework.security.web.access.intercept.AuthorizationFilter@5f735240]
+2026-06-09T21:29:17.270+03:00  INFO 15604 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-06-09T21:29:17.303+03:00  INFO 15604 --- [main] c.workflowsystem.demo.DemoApplication    : Started DemoApplication in 10.845 seconds (process running for 11.436)
+2026-06-09T21:32:01.452+03:00  INFO 15604 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-09T21:32:01.455+03:00  INFO 15604 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-06-09T21:32:01.481+03:00  INFO 15604 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-06-09T21:32:13.975+03:00  INFO 4196 --- [main] c.workflowsystem.demo.DemoApplication    : Starting DemoApplication using Java 17.0.18 with PID 4196 (D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend\target\classes started by Administrator in D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend)
+2026-06-09T21:32:13.981+03:00 DEBUG 4196 --- [main] c.workflowsystem.demo.DemoApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-06-09T21:32:13.981+03:00  INFO 4196 --- [main] c.workflowsystem.demo.DemoApplication    : The following 1 profile is active: "dev"
+2026-06-09T21:32:15.614+03:00  INFO 4196 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-09T21:32:15.792+03:00  INFO 4196 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 162 ms. Found 9 JPA repository interfaces.
+2026-06-09T21:32:16.957+03:00  INFO 4196 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-09T21:32:16.982+03:00  INFO 4196 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-09T21:32:16.982+03:00  INFO 4196 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-06-09T21:32:17.099+03:00  INFO 4196 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-09T21:32:17.099+03:00  INFO 4196 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3043 ms
+2026-06-09T21:32:17.534+03:00  INFO 4196 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-09T21:32:17.650+03:00  INFO 4196 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-06-09T21:32:17.702+03:00  INFO 4196 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-09T21:32:18.026+03:00  INFO 4196 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-09T21:32:18.080+03:00  INFO 4196 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-09T21:32:18.338+03:00  INFO 4196 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2e19b30
+2026-06-09T21:32:18.341+03:00  INFO 4196 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-09T21:32:18.395+03:00  WARN 4196 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-09T21:32:20.184+03:00  INFO 4196 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-09T21:32:20.503+03:00  INFO 4196 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-09T21:32:21.082+03:00 DEBUG 4196 --- [main] c.w.d.a.s.JwtAuthenticationFilter        : Filter 'jwtAuthenticationFilter' configured for use
+2026-06-09T21:32:21.448+03:00  INFO 4196 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-09T21:32:22.193+03:00  WARN 4196 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-09T21:32:22.996+03:00  INFO 4196 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
+2026-06-09T21:32:23.126+03:00  INFO 4196 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@44b860b1, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@793937ec, org.springframework.security.web.context.SecurityContextHolderFilter@2a71d430, org.springframework.security.web.header.HeaderWriterFilter@3e1596c3, org.springframework.web.filter.CorsFilter@3f27a95b, org.springframework.security.web.authentication.logout.LogoutFilter@6878cd83, com.workflowsystem.demo.auth.security.JwtAuthenticationFilter@730611a0, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@14021c10, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@ff7042c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1913188a, org.springframework.security.web.session.SessionManagementFilter@9e7d82e, org.springframework.security.web.access.ExceptionTranslationFilter@6cd7d05, org.springframework.security.web.access.intercept.AuthorizationFilter@52c4bf29]
+2026-06-09T21:32:23.895+03:00  INFO 4196 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-06-09T21:32:23.922+03:00  INFO 4196 --- [main] c.workflowsystem.demo.DemoApplication    : Started DemoApplication in 10.699 seconds (process running for 11.315)
+2026-06-09T21:32:31.052+03:00  INFO 4196 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-09T21:32:31.052+03:00  INFO 4196 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-09T21:32:31.056+03:00  INFO 4196 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-06-09T21:32:33.026+03:00  INFO 4196 --- [http-nio-8080-exec-9] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1315 ms
+2026-06-09T21:33:16.102+03:00  INFO 4196 --- [http-nio-8080-exec-10] c.w.demo.auth.service.AuthService        : Login attempt for email: birukg@eg.com
+2026-06-09T21:35:22.423+03:00  INFO 4196 --- [notification-2] c.w.d.n.service.NotificationService      : ==========================
+EMAIL NOTIFICATION
+To: approver1@eg.com
+Subject: Workflow Assigned For Approval
+Message: Workflow #6 has been assigned to you.
+==========================
+
+2026-06-09T21:36:11.062+03:00  INFO 4196 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-09T21:36:11.066+03:00  INFO 4196 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-06-09T21:36:11.081+03:00  INFO 4196 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
