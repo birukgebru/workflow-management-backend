@@ -268,3 +268,138 @@ java.lang.annotation.AnnotationFormatError: Duplicate annotation for class: inte
 2026-06-09T11:38:25.318+03:00  INFO 12164 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2026-06-09T11:38:25.318+03:00  INFO 12164 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2026-06-09T11:38:25.323+03:00  INFO 12164 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-06-09T20:48:05.424+03:00  INFO 11512 --- [main] c.workflowsystem.demo.DemoApplication    : Starting DemoApplication using Java 17.0.18 with PID 11512 (D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend\target\classes started by Administrator in D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend)
+2026-06-09T20:48:05.424+03:00 DEBUG 11512 --- [main] c.workflowsystem.demo.DemoApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-06-09T20:48:05.424+03:00  INFO 11512 --- [main] c.workflowsystem.demo.DemoApplication    : The following 1 profile is active: "dev"
+2026-06-09T20:48:07.522+03:00  INFO 11512 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-09T20:48:07.730+03:00  INFO 11512 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 183 ms. Found 9 JPA repository interfaces.
+2026-06-09T20:48:09.200+03:00  INFO 11512 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-09T20:48:09.229+03:00  INFO 11512 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-09T20:48:09.229+03:00  INFO 11512 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-06-09T20:48:09.378+03:00  INFO 11512 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-09T20:48:09.380+03:00  INFO 11512 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3844 ms
+2026-06-09T20:48:09.887+03:00  INFO 11512 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-09T20:48:10.041+03:00  INFO 11512 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-06-09T20:48:10.112+03:00  INFO 11512 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-09T20:48:10.528+03:00  INFO 11512 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-09T20:48:10.586+03:00  INFO 11512 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-09T20:48:10.971+03:00  INFO 11512 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2e19b30
+2026-06-09T20:48:10.974+03:00  INFO 11512 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-09T20:48:11.081+03:00  WARN 11512 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-09T20:48:13.195+03:00  INFO 11512 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-09T20:48:13.729+03:00  INFO 11512 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-09T20:48:14.414+03:00 DEBUG 11512 --- [main] c.w.d.a.s.JwtAuthenticationFilter        : Filter 'jwtAuthenticationFilter' configured for use
+2026-06-09T20:48:14.818+03:00  INFO 11512 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-09T20:48:15.384+03:00  WARN 11512 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'notificationEventListener' defined in file [D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend\target\classes\com\workflowsystem\demo\notification\listener\NotificationEventListener.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'notificationService' defined in file [D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend\target\classes\com\workflowsystem\demo\notification\service\NotificationService.class]: Failed to instantiate [com.workflowsystem.demo.notification.service.NotificationService]: Constructor threw exception
+2026-06-09T20:48:15.387+03:00  INFO 11512 --- [main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-09T20:48:15.388+03:00  INFO 11512 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-06-09T20:48:15.388+03:00  INFO 11512 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-06-09T20:48:15.402+03:00  INFO 11512 --- [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-06-09T20:48:15.437+03:00  INFO 11512 --- [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-06-09T20:48:15.465+03:00 ERROR 11512 --- [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'notificationEventListener' defined in file [D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend\target\classes\com\workflowsystem\demo\notification\listener\NotificationEventListener.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'notificationService' defined in file [D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend\target\classes\com\workflowsystem\demo\notification\service\NotificationService.class]: Failed to instantiate [com.workflowsystem.demo.notification.service.NotificationService]: Constructor threw exception
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:795) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:237) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1355) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1192) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624) ~[spring-context-6.1.6.jar:6.1.6]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar:3.2.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar:3.2.5]
+	at com.workflowsystem.demo.DemoApplication.main(DemoApplication.java:10) ~[classes/:na]
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'notificationService' defined in file [D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend\target\classes\com\workflowsystem\demo\notification\service\NotificationService.class]: Failed to instantiate [com.workflowsystem.demo.notification.service.NotificationService]: Constructor threw exception
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:1317) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1202) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:904) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:782) ~[spring-beans-6.1.6.jar:6.1.6]
+	... 19 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.workflowsystem.demo.notification.service.NotificationService]: Constructor threw exception
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:221) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:88) ~[spring-beans-6.1.6.jar:6.1.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:1311) ~[spring-beans-6.1.6.jar:6.1.6]
+	... 31 common frames omitted
+Caused by: java.lang.Error: Unresolved compilation problem: 
+	The declared package "" does not match the expected package "com.workflowsystem.demo.notification.service"
+
+	at com.workflowsystem.demo.notification.service.NotificationService.<init>(NotificationService.java:1) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:481) ~[na:na]
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:195) ~[spring-beans-6.1.6.jar:6.1.6]
+	... 33 common frames omitted
+
+2026-06-09T20:51:26.481+03:00  INFO 5056 --- [main] c.workflowsystem.demo.DemoApplication    : Starting DemoApplication using Java 17.0.18 with PID 5056 (D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend\target\classes started by Administrator in D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend)
+2026-06-09T20:51:26.486+03:00 DEBUG 5056 --- [main] c.workflowsystem.demo.DemoApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-06-09T20:51:26.488+03:00  INFO 5056 --- [main] c.workflowsystem.demo.DemoApplication    : The following 1 profile is active: "dev"
+2026-06-09T20:51:28.507+03:00  INFO 5056 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-09T20:51:28.693+03:00  INFO 5056 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 168 ms. Found 9 JPA repository interfaces.
+2026-06-09T20:51:30.192+03:00  INFO 5056 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-09T20:51:30.223+03:00  INFO 5056 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-09T20:51:30.225+03:00  INFO 5056 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-06-09T20:51:30.382+03:00  INFO 5056 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-09T20:51:30.382+03:00  INFO 5056 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3790 ms
+2026-06-09T20:51:30.933+03:00  INFO 5056 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-09T20:51:31.046+03:00  INFO 5056 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-06-09T20:51:31.118+03:00  INFO 5056 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-09T20:51:31.527+03:00  INFO 5056 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-09T20:51:31.576+03:00  INFO 5056 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-09T20:51:31.866+03:00  INFO 5056 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7b7e4b20
+2026-06-09T20:51:31.869+03:00  INFO 5056 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-09T20:51:31.936+03:00  WARN 5056 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-09T20:51:33.830+03:00  INFO 5056 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-09T20:51:34.162+03:00  INFO 5056 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-09T20:51:34.816+03:00 DEBUG 5056 --- [main] c.w.d.a.s.JwtAuthenticationFilter        : Filter 'jwtAuthenticationFilter' configured for use
+2026-06-09T20:51:35.260+03:00  INFO 5056 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-09T20:51:36.223+03:00  WARN 5056 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-09T20:51:37.217+03:00  INFO 5056 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
+2026-06-09T20:51:37.371+03:00  INFO 5056 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@9cabd07, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2a32be8d, org.springframework.security.web.context.SecurityContextHolderFilter@656bd8e, org.springframework.security.web.header.HeaderWriterFilter@14021c10, org.springframework.web.filter.CorsFilter@7942987, org.springframework.security.web.authentication.logout.LogoutFilter@2a073f4f, com.workflowsystem.demo.auth.security.JwtAuthenticationFilter@8b727cb, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1030ce34, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@50d507ab, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5941a2ad, org.springframework.security.web.session.SessionManagementFilter@6c1e2161, org.springframework.security.web.access.ExceptionTranslationFilter@12c66345, org.springframework.security.web.access.intercept.AuthorizationFilter@1e3469df]
+2026-06-09T20:51:38.228+03:00  INFO 5056 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-06-09T20:51:38.258+03:00  INFO 5056 --- [main] c.workflowsystem.demo.DemoApplication    : Started DemoApplication in 12.703 seconds (process running for 13.376)
+2026-06-09T20:51:45.953+03:00  INFO 5056 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-09T20:51:45.953+03:00  INFO 5056 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-09T20:51:45.957+03:00  INFO 5056 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+2026-06-09T20:51:48.061+03:00  INFO 5056 --- [http-nio-8080-exec-8] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1440 ms
+2026-06-09T20:52:30.256+03:00  INFO 5056 --- [http-nio-8080-exec-9] c.w.demo.auth.service.AuthService        : Login attempt for email: birukg@eg.com
+2026-06-09T20:53:38.779+03:00  INFO 5056 --- [http-nio-8080-exec-4] c.w.d.w.s.impl.WorkflowServiceImpl       : Workflow request submitted by user 2 with request ID 12
+2026-06-09T20:53:38.812+03:00  INFO 5056 --- [notification-1] c.w.d.n.service.NotificationService      : ==========================
+EMAIL NOTIFICATION
+To: biruk.gebru28@gmail.com
+Subject: New Workflow Request
+Message: A new request was submitted
+==========================
+
+2026-06-09T20:53:38.814+03:00  INFO 5056 --- [notification-3] c.w.d.n.service.NotificationService      : ==========================
+EMAIL NOTIFICATION
+To: birukg@eg.com
+Subject: Workflow Submitted
+Message: Workflow #12 has been submitted successfully.
+==========================
+
+2026-06-09T21:00:34.189+03:00  INFO 5056 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-09T21:00:34.193+03:00  INFO 5056 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-06-09T21:00:34.199+03:00  INFO 5056 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
