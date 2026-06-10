@@ -8,9 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import com.workflowsystem.demo.auth.entity.User;
-import com.workflowsystem.demo.auth.repository.UserRepository;
-import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.shared.response.ApiResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowDashboardResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowHistoryResponse;
@@ -38,12 +35,10 @@ import jakarta.validation.Valid;
 
 public class WorkflowController {
     private final WorkflowService workflowService;
-    private final UserRepository userRepository;
     private final WorkflowHistoryRepository workflowHistoryRepository;
 
-    public WorkflowController(WorkflowService workflowService, UserRepository userRepository, WorkflowHistoryRepository workflowHistoryRepository) {
+    public WorkflowController(WorkflowService workflowService, WorkflowHistoryRepository workflowHistoryRepository) {
         this.workflowService = workflowService;
-        this.userRepository = userRepository;
         this.workflowHistoryRepository = workflowHistoryRepository;
     }
 
