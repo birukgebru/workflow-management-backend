@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.workflowsystem.demo.workflow.dto.WorkflowHistoryResponse;
-import com.workflowsystem.demo.workflow.entity.WorkflowRequest;
 import com.workflowsystem.demo.workflow.mapper.WorkflowHistoryMapper;
 import com.workflowsystem.demo.workflow.repository.WorkflowHistoryRepository;
 

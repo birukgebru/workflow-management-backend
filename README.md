@@ -1,35 +1,37 @@
 # Enterprise Workflow Management System
-
-An Enterprise Workflow Management System is a backend platform. The platrom designed to handle full lifecycle of busines workflows. This system also manages role-based operations and audit tracking. 
-
-The system demonstrates enterprise backend engineering concepts. Implements JWT authentication and RBAC for security. In additon  to workflow management, it handles audit logs. Ensures transactional integrity and have REST API documentation.
+An Enterprise Workflow Management System is an API built with Spring Boot framework. The system manages the complete lifecycle of workflow requests processes (submission -> review -> approval/rejection).
+It demonstrates enterprise backend engineering practices. These practices including JWT authentication, refresh token management, role-based access control (RBAC), workflow state management, audit logging, monitoring, validation, pagination, filtering, and search capabilities.
+This project follows a modular monolith architecture. It exposes documented REST API using OpenAPI/Swagger.
 
 ## FEATURES
-Authentication
-- JWT authentication
-- Refresh token flow
-- Stateless security
-- Password hashing
 
-Authorization
-- RBAC
-- Admin/Reviewer/Approver roles
+### Authentication & Security
+```
+JWT Access Token Authentication  *  Refresh Token Flow  *  Logout & Token Revocation  *  Password Reset Workflow  *  BCrypt Password Hashing  *  Stateless Security  *  Global Exception Handling  *  Request Validation
+```
+### Authorization (RBAC)
+```
+Role-Based Access Control (Admin, Requester, Reviewer, Approver)  *  Method-Level Security
+```
+### Workflow Management
+```
+Submit Workflow Requests *  Assign Reviewers  *  Assign Approvers  *  Review Requests  *  Approve Requests  *  Reject Requests  *  Workflow State Validation  *  Workflow Status Tracking 
+```
+### Audit & Monitoring
+```
+Workflow History Tracking  *  Audit Logging  *  Action Traceability  *  Spring Boot Actuator  *  Application Health Monitoring *  Application Metrics
+```
+### Search & Data Access
+```
+Pagination  *  Sorting  *  Status Filtering  *  Workflow Search  *  User-Specific Request Views
+```
 
-Workflow Engine
-- Submit workflow requests
-- Review/Approve/Reject requests
-- Workflow status tracking
-
-Auditability
-- Workflow history tracking
-- Audit logs and action traceability
-
-API
-- RESTful API
-- Swagger/OpenAPI documentation
+### API & Documentation
+```
+RESTful API Design  *  OpenAPI / Swagger Documentation  *  Standardized API Responses
+```
 
 ## TECH STACK
-
 - Java 17
 - Spring Boot
 - Spring Security
@@ -40,15 +42,13 @@ API
 - Maven
 
 ## ARCHITECTURE
-
-The application follows layered modular monolith architecture (auth, workflow, audit, shared, config). Each module is separated into controller, service, repository, dto, mapper, entity.
+The application follows layered modular monolith architecture (auth, workflow, audit, file, notification). Each module is separated into controller, service, repository, dto, mapper, entity.
 
 ![Architecture Diagram](docs/images/architecture-diagram-layered.png)
 
 ## PROJECT STRUCTURE
 
 ```text
-src/main/java/com/workflowsystem/demo 
 ├───audit
 │   ├───controller
 │   ├───dto
@@ -64,8 +64,21 @@ src/main/java/com/workflowsystem/demo
 │   ├───mapper
 │   ├───repository
 │   ├───security
+│   ├───seeder
 │   └───service
 ├───config
+├───file
+│   ├───controller
+│   ├───dto
+│   ├───entity
+│   ├───repository
+│   └───service
+│       └───impl
+├───notification
+│   ├───controller
+│   ├───event
+│   ├───listener
+│   └───service
 ├───shared
 │   ├───exception
 │   └───response
@@ -76,12 +89,13 @@ src/main/java/com/workflowsystem/demo
     ├───enums
     ├───mapper
     ├───repository
-    └───service
-        └───impl
+    ├───security
+    ├───service
+    │   └───impl
+    └───state
 ```
 
 ## AUTHENTICATION FLOW
-
 1. User registers account
 2. User logs in
 3. JWT access token issued
@@ -89,14 +103,16 @@ src/main/java/com/workflowsystem/demo
 5. Protected endpoints require Bearer token
 6. Role-based access enforced
 
+## WORKFLOW LIFECYCLE
+![Workflow Lifecycle Diagram](docs/images/workflow-lifecycle.png)
 ## CORE ENTITITES
-
-- Users
-- Roles
-- Workflow Requests
-- Workflow History
-- Audit Logs
-- Refresh Tokens
+- User
+- Role
+- RefreshToken
+- PasswordResetToken
+- WorkflowRequest
+- WorkflowHistory
+- AuditLog
 
 ## SETUP INSTRUCTIONS
 
@@ -121,7 +137,6 @@ CREATE DATABASE workflow_db;
 ```
 
 ### Configure Application
-
 Copy the example configuration file:
 
 ```bash
@@ -145,6 +160,26 @@ mvn spring-boot:run
 http://localhost:8080
 ```
 
+## MONITORING
+
+The application exposes operational endpoints using Spring Boot Actuator.
+
+### Health
+```
+GET /actuator/health
+```
+### Application Info
+```
+GET /actuator/info
+```
+### Metrics
+```
+GET /actuator/metrics
+```
+### Loggers
+```
+GET /actuator/loggers
+```
 ## API DOCUMENTATION
 
 ```text
@@ -164,13 +199,41 @@ http://localhost:8080/swagger-ui/index.html
 ![Authorization](docs/images/swagger-ui-authorization.png)
 
 
+## DEFAULT ROLES
+
+| Role | Responsibility |
+|--------|---------------|
+| ADMIN | Full system access |
+| REQUESTER | Submit workflow requests |
+| REVIEWER | Review assigned requests |
+| APPROVER | Approve or reject reviewed requests |
+
+## ENGINEERING CONCEPTS DEMONSTRATED
+
+- Spring Security
+- JWT Authentication
+- Refresh Token Strategy
+- Role-Based Access Control (RBAC)
+- State Machine Pattern
+- Audit Logging
+- DTO Mapping
+- Transaction Management
+- Global Exception Handling
+- Pagination & Filtering
+- REST API Design
+- Monitoring with Actuator
+- Modular Monolith Architecture
+
 ## FUTURE IMPROVEMENTS
 
-- Email notifications
-- Workflow attachments
-- Dashboard analytics
+- File attachment storage (AWS S3 / MinIO)
+- Email notifications via SMTP
+- Docker containerization
 - Docker Compose deployment
 - CI/CD pipeline
+- Elasticsearch integration
 - Workflow configuration engine
+- Multi-tenancy support
+- Kubernetes deployment 
 
 

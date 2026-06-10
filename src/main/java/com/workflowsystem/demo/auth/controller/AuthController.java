@@ -133,9 +133,6 @@ public class AuthController {
         description = "Generates a password reset token and sends it to the user's email"
     )
     public ApiResponse<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
-        // String token = passwordResetService.generateResetToken(request.getEmail());
-
-        // System.out.println("password reset token email sent: " + token);
         logger.info("Password reset token generated for email: {}", request.getEmail());
 
         return new ApiResponse<>(

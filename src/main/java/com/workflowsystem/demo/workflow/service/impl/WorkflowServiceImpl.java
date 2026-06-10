@@ -313,7 +313,6 @@ public class WorkflowServiceImpl implements WorkflowService {
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
         User approver = userRepository.findUserById(approverId)
                 .orElseThrow(() -> new ResourceNotFoundException("Approver not found"));
-
         boolean hasApproverRole = approver.getRoles()
                                           .stream()        
                                           .anyMatch(r -> r.getName() == Role.ROLE_APPROVER);
@@ -340,9 +339,8 @@ public class WorkflowServiceImpl implements WorkflowService {
                 workflowRequestRepository.countByStatus(WorkflowStatus.APPROVED),
                 workflowRequestRepository.countByStatus(WorkflowStatus.REJECTED)
         );
-        return WorkflowDashboardResponse;
         
-
+        return WorkflowDashboardResponse;
     }
 
     private void logWorkflowHistory(

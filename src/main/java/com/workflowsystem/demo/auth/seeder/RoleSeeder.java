@@ -24,7 +24,6 @@ public class RoleSeeder implements CommandLineRunner {
                 roleRepository.save(newRole);
             }
         }
-        System.out.println("Roles seeded successfully");
     }
     
 }
