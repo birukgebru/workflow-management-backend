@@ -14,8 +14,7 @@ import com.workflowsystem.demo.workflow.dto.WorkflowHistoryResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowSubmitRequest;
 import com.workflowsystem.demo.workflow.enums.WorkflowStatus;
-import com.workflowsystem.demo.workflow.mapper.WorkflowHistoryMapper;
-import com.workflowsystem.demo.workflow.repository.WorkflowHistoryRepository;
+import com.workflowsystem.demo.workflow.service.WorkflowHistoryService;
 import com.workflowsystem.demo.workflow.service.WorkflowService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,11 +34,11 @@ import jakarta.validation.Valid;
 
 public class WorkflowController {
     private final WorkflowService workflowService;
-    private final WorkflowHistoryRepository workflowHistoryRepository;
+    private final WorkflowHistoryService workflowHistoryService;
 
-    public WorkflowController(WorkflowService workflowService, WorkflowHistoryRepository workflowHistoryRepository) {
+    public WorkflowController(WorkflowService workflowService, WorkflowHistoryService workflowHistoryService) {
         this.workflowService = workflowService;
-        this.workflowHistoryRepository = workflowHistoryRepository;
+        this.workflowHistoryService = workflowHistoryService;
     }
 
     @PostMapping("/submit")
@@ -243,11 +242,7 @@ public class WorkflowController {
         description = "Retrieves the history of a specific workflow request"
     )
     public ApiResponse<List<WorkflowHistoryResponse>> getWorkflowHistory(@PathVariable Long id) {
-        List<WorkflowHistoryResponse> workflowHistoryResponses = workflowHistoryRepository
-                .findByWorkflowRequestIdOrderByChangedAtAsc(id)
-                .stream()
-                .map(WorkflowHistoryMapper::toWorkflowHistoryResponse)
-                .toList();
+        List<WorkflowHistoryResponse> workflowHistoryResponses = workflowHistoryService.getWorkflowHistories(id);
 
         return new ApiResponse<>(
             true,

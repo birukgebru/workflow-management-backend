@@ -815,3 +815,37 @@ Message: Workflow #14 has been assigned to you.
 2026-06-10T13:19:46.041+03:00  INFO 14808 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2026-06-10T13:19:46.047+03:00  INFO 14808 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2026-06-10T13:19:46.051+03:00  INFO 14808 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-06-10T14:06:52.425+03:00  INFO 18584 --- [main] c.workflowsystem.demo.DemoApplication    : Starting DemoApplication using Java 17.0.18 with PID 18584 (D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend\target\classes started by Administrator in D:\Dev\PeProjects\enterprise-workflow-system\workflow-management-backend)
+2026-06-10T14:06:52.430+03:00 DEBUG 18584 --- [main] c.workflowsystem.demo.DemoApplication    : Running with Spring Boot v3.2.5, Spring v6.1.6
+2026-06-10T14:06:52.431+03:00  INFO 18584 --- [main] c.workflowsystem.demo.DemoApplication    : The following 1 profile is active: "dev"
+2026-06-10T14:06:54.434+03:00  INFO 18584 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-10T14:06:54.642+03:00  INFO 18584 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 188 ms. Found 9 JPA repository interfaces.
+2026-06-10T14:06:56.342+03:00  INFO 18584 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-10T14:06:56.367+03:00  INFO 18584 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-10T14:06:56.370+03:00  INFO 18584 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.20]
+2026-06-10T14:06:56.545+03:00  INFO 18584 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-10T14:06:56.545+03:00  INFO 18584 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4039 ms
+2026-06-10T14:06:57.132+03:00  INFO 18584 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-10T14:06:57.302+03:00  INFO 18584 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-06-10T14:06:57.382+03:00  INFO 18584 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-10T14:06:57.918+03:00  INFO 18584 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-10T14:06:57.995+03:00  INFO 18584 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-10T14:06:58.369+03:00  INFO 18584 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6fefc5ea
+2026-06-10T14:06:58.372+03:00  INFO 18584 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-10T14:06:58.454+03:00  WARN 18584 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-10T14:07:00.844+03:00  INFO 18584 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-10T14:07:01.259+03:00  INFO 18584 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-10T14:07:02.101+03:00 DEBUG 18584 --- [main] c.w.d.a.s.JwtAuthenticationFilter        : Filter 'jwtAuthenticationFilter' configured for use
+2026-06-10T14:07:02.591+03:00  INFO 18584 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-10T14:07:03.737+03:00  WARN 18584 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-10T14:07:04.865+03:00  INFO 18584 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoint(s) beneath base path '/actuator'
+2026-06-10T14:07:05.076+03:00  INFO 18584 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1c38d025, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@48b85dc5, org.springframework.security.web.context.SecurityContextHolderFilter@3eea7c4b, org.springframework.security.web.header.HeaderWriterFilter@6c1e2161, org.springframework.web.filter.CorsFilter@350a3df3, org.springframework.security.web.authentication.logout.LogoutFilter@39ebf505, com.workflowsystem.demo.auth.security.JwtAuthenticationFilter@194a653d, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@46f32536, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@724d4c0a, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3f31ccef, org.springframework.security.web.session.SessionManagementFilter@7f336491, org.springframework.security.web.access.ExceptionTranslationFilter@30769e7a, org.springframework.security.web.access.intercept.AuthorizationFilter@7942987]
+2026-06-10T14:07:06.162+03:00  INFO 18584 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path ''
+2026-06-10T14:07:06.204+03:00  INFO 18584 --- [main] c.workflowsystem.demo.DemoApplication    : Started DemoApplication in 14.653 seconds (process running for 15.357)
+2026-06-10T14:10:05.220+03:00  INFO 18584 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-10T14:10:05.222+03:00  INFO 18584 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-10T14:10:05.224+03:00  INFO 18584 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-06-10T14:10:05.601+03:00  INFO 18584 --- [http-nio-8080-exec-1] c.w.demo.auth.service.AuthService        : Login attempt for email: birukg@eg.com
+2026-06-10T14:12:04.518+03:00  INFO 18584 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-10T14:12:04.526+03:00  INFO 18584 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-06-10T14:12:04.545+03:00  INFO 18584 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
