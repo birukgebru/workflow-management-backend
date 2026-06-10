@@ -18,6 +18,7 @@ import com.workflowsystem.demo.audit.service.AuditLogService;
 import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.enums.Role;
 import com.workflowsystem.demo.auth.repository.UserRepository;
+import com.workflowsystem.demo.auth.service.CurrentUserService;
 import com.workflowsystem.demo.notification.event.ApproverAssignedEvent;
 import com.workflowsystem.demo.notification.event.ReviewerAssignedEvent;
 import com.workflowsystem.demo.notification.event.WorkflowApprovedEvent;
@@ -45,6 +46,7 @@ public class WorkflowServiceImpl implements WorkflowService {
     private final WorkflowStateMachine workflowStateMachine;
     private final AuditLogService auditLogService;
     private final ApplicationEventPublisher eventPublisher;
+    private final CurrentUserService currentUserService;
     private static final Logger logger = LoggerFactory.getLogger(WorkflowServiceImpl.class);
 
     public WorkflowServiceImpl(
@@ -53,7 +55,8 @@ public class WorkflowServiceImpl implements WorkflowService {
             UserRepository userRepository,
             WorkflowStateMachine workflowStateMachine,
             AuditLogService auditLogService, 
-            ApplicationEventPublisher eventPublisher
+            ApplicationEventPublisher eventPublisher,
+            CurrentUserService currentUserService
         ) {
         this.workflowRequestRepository = workflowRequestRepository;
         this.workflowHistoryRepository = workflowHistoryRepository;
@@ -61,11 +64,13 @@ public class WorkflowServiceImpl implements WorkflowService {
         this.workflowStateMachine = workflowStateMachine;
         this.auditLogService = auditLogService;
         this.eventPublisher = eventPublisher;
+        this.currentUserService = currentUserService;
     }
 
     @Override
     @Transactional
-    public WorkflowResponse submitRequest(WorkflowSubmitRequest submitRequest, User currentUser) {
+    public WorkflowResponse submitRequest(WorkflowSubmitRequest submitRequest) {
+        User currentUser = currentUserService.getCurrentUser();
         WorkflowRequest workflowRequest = new WorkflowRequest();
         workflowRequest.setTitle(submitRequest.getTitle());
         workflowRequest.setDescription(submitRequest.getDescription());
@@ -105,8 +110,8 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<WorkflowResponse> getMyRequests(User currentUser){
-        return workflowRequestRepository.findBySubmittedByOrderByCreatedAtDesc(currentUser)
+    public List<WorkflowResponse> getMyRequests(){
+        return workflowRequestRepository.findBySubmittedByOrderByCreatedAtDesc(currentUserService.getCurrentUser())
                 .stream()
                 .map(WorkflowRequestMapper::toWorkflowResponse)
                 .toList();
@@ -163,37 +168,37 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Transactional
-    public WorkflowResponse reviewRequest(@NonNull Long requestId, User currentUser) {
+    public WorkflowResponse reviewRequest(@NonNull Long requestId) {
         WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
 
         WorkflowStatus previousStatus = workflowRequest.getStatus();
         workflowStateMachine.validateTransition(previousStatus, WorkflowStatus.UNDER_REVIEW);
 
-        if(workflowRequest.getAssignedReviewer() == null || !workflowRequest.getAssignedReviewer().getId().equals(currentUser.getId())) {
+        if(workflowRequest.getAssignedReviewer() == null || !workflowRequest.getAssignedReviewer().getId().equals(currentUserService.getCurrentUser().getId())) {
             throw new IllegalStateException("You are not the assigned reviewer for this request");
         }
 
         workflowRequest.setStatus(WorkflowStatus.UNDER_REVIEW);
-        workflowRequest.setReviewedBy(currentUser);
+        workflowRequest.setReviewedBy(currentUserService.getCurrentUser());
         workflowRequest.setReviewedAt(LocalDateTime.now());
 
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
 
-        logger.info("Workflow request with ID {} marked under review by user {}", savedWorkflowRequest.getId(), currentUser.getId());
+        logger.info("Workflow request with ID {} marked under review by user {}", savedWorkflowRequest.getId(), currentUserService.getCurrentUser().getId());
         logWorkflowHistory(
                 savedWorkflowRequest,
                 previousStatus,
                 savedWorkflowRequest.getStatus(),
                 WorkflowAction.REVIEWED,
-                currentUser
+                currentUserService.getCurrentUser()
         );
 
         auditLogService.logAudit(
                 "REVIEWED",
                 "WorkflowRequest",
                 savedWorkflowRequest.getId(),
-                currentUser,
+                currentUserService.getCurrentUser(),
                 "Workflow request marked under review"
         );
 
@@ -202,36 +207,36 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Transactional
-    public WorkflowResponse approveRequest(@NonNull Long requestId, User currentUser) {
+    public WorkflowResponse approveRequest(@NonNull Long requestId) {
         WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
         WorkflowStatus previousStatus = workflowRequest.getStatus();
         workflowStateMachine.validateTransition(previousStatus, WorkflowStatus.APPROVED);
 
-        if(workflowRequest.getAssignedApprover() == null || !workflowRequest.getAssignedApprover().getId().equals(currentUser.getId())) {
+        if(workflowRequest.getAssignedApprover() == null || !workflowRequest.getAssignedApprover().getId().equals(currentUserService.getCurrentUser().getId())) {
             throw new IllegalStateException("You are not the assigned approver for this request");
         }
 
         workflowRequest.setStatus(WorkflowStatus.APPROVED);
-        workflowRequest.setApprovedBy(currentUser);
+        workflowRequest.setApprovedBy(currentUserService.getCurrentUser());
         workflowRequest.setApprovedAt(LocalDateTime.now());
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
         
-        logger.info("Workflow request with ID {} approved by user {}", savedWorkflowRequest.getId(), currentUser.getId());
+        logger.info("Workflow request with ID {} approved by user {}", savedWorkflowRequest.getId(), currentUserService.getCurrentUser().getId());
 
         logWorkflowHistory(
                 savedWorkflowRequest,
                 previousStatus,
                 savedWorkflowRequest.getStatus(),
                 WorkflowAction.APPROVED,
-                currentUser
+                currentUserService.getCurrentUser()
         );
 
         auditLogService.logAudit(
                 "APPROVED",
                 "WorkflowRequest",
                 savedWorkflowRequest.getId(),
-                currentUser,
+                currentUserService.getCurrentUser(),
                 "Workflow request approved"
         );
 
@@ -244,24 +249,24 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Transactional
-    public WorkflowResponse rejectRequest(@NonNull Long requestId, User currentUser) {
+    public WorkflowResponse rejectRequest(@NonNull Long requestId) {
         WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
         WorkflowStatus previousStatus = workflowRequest.getStatus();
         workflowStateMachine.validateTransition(previousStatus, WorkflowStatus.REJECTED);
 
-        if(workflowRequest.getAssignedApprover() == null || !workflowRequest.getAssignedApprover().getId().equals(currentUser.getId())) {
+        if(workflowRequest.getAssignedApprover() == null || !workflowRequest.getAssignedApprover().getId().equals(currentUserService.getCurrentUser().getId())) {
                  throw new IllegalStateException("You are not the assigned approver for this request to reject");
         }
 
         workflowRequest.setStatus(WorkflowStatus.REJECTED);
-        workflowRequest.setRejectedBy(currentUser);
+        workflowRequest.setRejectedBy(currentUserService.getCurrentUser());
         workflowRequest.setRejectedAt(LocalDateTime.now());
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
 
-        logger.info("Workflow request with ID {} rejected by user {}", savedWorkflowRequest.getId(), currentUser.getId());
-        logWorkflowHistory(savedWorkflowRequest, previousStatus, savedWorkflowRequest.getStatus(), WorkflowAction.REJECTED, currentUser);
-        auditLogService.logAudit("REJECTED", "WorkflowRequest", savedWorkflowRequest.getId(), currentUser, "Workflow request rejected");
+        logger.info("Workflow request with ID {} rejected by user {}", savedWorkflowRequest.getId(), currentUserService.getCurrentUser().getId());
+        logWorkflowHistory(savedWorkflowRequest, previousStatus, savedWorkflowRequest.getStatus(), WorkflowAction.REJECTED, currentUserService.getCurrentUser());
+        auditLogService.logAudit("REJECTED", "WorkflowRequest", savedWorkflowRequest.getId(), currentUserService.getCurrentUser(), "Workflow request rejected");
 
         //TODO get email 
         String requesterE = "biruk.gebru28@gmail.com";
@@ -280,23 +285,21 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Transactional
-    public WorkflowResponse assignReviewer(Long requestId, Long reviewerId, User currentUser) {
+    public WorkflowResponse assignReviewer(Long requestId, Long reviewerId) {
         WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
         User reviewer = userRepository.findUserById(reviewerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reviewer not found"));
         boolean hasReviewerRole = reviewer.getRoles()
                 .stream()
-                .anyMatch(
-                    r -> r.getName() == Role.ROLE_REVIEWER
-                );
+                .anyMatch(r -> r.getName() == Role.ROLE_REVIEWER);
 
         if(!hasReviewerRole){
             throw new IllegalArgumentException("User is not a reviewer");
         }
         workflowRequest.setAssignedReviewer(reviewer);
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
-        auditLogService.logAudit("ASSIGNED_REVIEWER", "WorkflowRequest", savedWorkflowRequest.getId(), currentUser, "Assigned reviewer with ID " + reviewerId);
+        auditLogService.logAudit("ASSIGNED_REVIEWER", "WorkflowRequest", savedWorkflowRequest.getId(), currentUserService.getCurrentUser(), "Assigned reviewer with ID " + reviewerId);
         eventPublisher.publishEvent(new ReviewerAssignedEvent(savedWorkflowRequest.getId(), reviewer.getEmail()));
         
         return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
@@ -304,7 +307,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     @Transactional
-    public WorkflowResponse assignApprover(Long requestId, Long approverId, User currentUser) {
+    public WorkflowResponse assignApprover(Long requestId, Long approverId) {
         WorkflowRequest workflowRequest = workflowRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
         User approver = userRepository.findUserById(approverId)
@@ -320,21 +323,14 @@ public class WorkflowServiceImpl implements WorkflowService {
 
         workflowRequest.setAssignedApprover(approver);
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
-        auditLogService.logAudit(
-                "ASSIGNED_APPROVER",
-                "WorkflowRequest",
-                savedWorkflowRequest.getId(),
-                currentUser,
-                "Assigned approver with ID " + approverId
-        );
-
+        auditLogService.logAudit("ASSIGNED_APPROVER", "WorkflowRequest", savedWorkflowRequest.getId(), currentUserService.getCurrentUser(), "Assigned approver with ID " + approverId);
         eventPublisher.publishEvent(new ApproverAssignedEvent(savedWorkflowRequest.getId(), approver.getEmail()));
 
         return WorkflowRequestMapper.toWorkflowResponse(savedWorkflowRequest);
     }
 
     @Override
-    public WorkflowDashboardResponse getDashboardInfo(User currentUser) {
+    public WorkflowDashboardResponse getDashboardInfo() {
 
         WorkflowDashboardResponse WorkflowDashboardResponse = new WorkflowDashboardResponse(
                 workflowRequestRepository.countAll(),

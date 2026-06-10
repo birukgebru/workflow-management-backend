@@ -12,8 +12,8 @@ import com.workflowsystem.demo.workflow.dto.WorkflowSubmitRequest;
 import com.workflowsystem.demo.workflow.enums.WorkflowStatus;
 
 public interface WorkflowService {
-    WorkflowResponse submitRequest(WorkflowSubmitRequest request, User currentUser );
-    List<WorkflowResponse> getMyRequests(User currentUser);
+    WorkflowResponse submitRequest(WorkflowSubmitRequest request);
+    List<WorkflowResponse> getMyRequests();
     Page<WorkflowResponse> getRequestsByStatus(WorkflowStatus status, int page, int size); 
     Page<WorkflowResponse> getRequestsByTitle(String keyword, int page, int size);
     Page<WorkflowResponse> getRequestsByTitleOrDescription(String keyword, int page, int size);
@@ -22,10 +22,10 @@ public interface WorkflowService {
     Page<WorkflowResponse> getRequestsBySubmitter(Long submittedById, int page, int size); 
     Page<WorkflowResponse> getAllWorkflowRequests(int page, int size);
     WorkflowResponse getRequestById(Long id); 
-    WorkflowResponse reviewRequest(@NonNull Long requestId, User currentUser);
-    WorkflowResponse approveRequest(@NonNull Long requestId, User currentUser);
-    WorkflowResponse rejectRequest(@NonNull Long requestId, User currentUser);
-    WorkflowResponse assignReviewer(Long requestId, Long reviewerId, User currentUser);
-    WorkflowResponse assignApprover(Long requestId, Long approverId, User currentUser); 
-    WorkflowDashboardResponse getDashboardInfo(User currentUser);
+    WorkflowResponse reviewRequest(@NonNull Long requestId);
+    WorkflowResponse approveRequest(@NonNull Long requestId);
+    WorkflowResponse rejectRequest(@NonNull Long requestId);
+    WorkflowResponse assignReviewer(Long requestId, Long reviewerId);
+    WorkflowResponse assignApprover(Long requestId, Long approverId); 
+    WorkflowDashboardResponse getDashboardInfo();
 }

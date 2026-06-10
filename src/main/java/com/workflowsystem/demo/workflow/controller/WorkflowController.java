@@ -74,9 +74,8 @@ public class WorkflowController {
     public ApiResponse<WorkflowResponse> submitRequest(
             @Valid @RequestBody WorkflowSubmitRequest request,
             Authentication authentication) {
-        User currentUser = getCurrentUser(authentication);
 
-        WorkflowResponse workflowResponse = workflowService.submitRequest(request, currentUser);
+        WorkflowResponse workflowResponse = workflowService.submitRequest(request);
 
         return new ApiResponse<>(
             true,
@@ -120,8 +119,8 @@ public class WorkflowController {
     )
 
     public ApiResponse<WorkflowDashboardResponse> getDashboard(Authentication authentication) {
-        User currentUser = getCurrentUser(authentication);
-        WorkflowDashboardResponse dashboardResponse = workflowService.getDashboardInfo(currentUser);
+        WorkflowDashboardResponse dashboardResponse = workflowService.getDashboardInfo();
+
         return new ApiResponse<>(
             true,
             "Dashboard information retrieved",
@@ -135,9 +134,7 @@ public class WorkflowController {
         description = "Retrieves a list of workflow requests submitted by the authenticated user"
     )
     public ApiResponse<List<WorkflowResponse>> getMyRequests(Authentication authentication){
-        User currentUser = getCurrentUser(authentication);
-
-        List<WorkflowResponse> workflowResponses = workflowService.getMyRequests(currentUser);
+        List<WorkflowResponse> workflowResponses = workflowService.getMyRequests();
 
         return new ApiResponse<>(
             true,
@@ -287,12 +284,8 @@ public class WorkflowController {
         summary = "Review workflow request",
         description = "Allows authenticated users to review a specific workflow request"
     )
-    public ApiResponse<WorkflowResponse> reviewRequest(
-            @PathVariable @NonNull Long id,
-            Authentication authentication) {
-        User currentUser = getCurrentUser(authentication);
-
-        WorkflowResponse workflowResponse = workflowService.reviewRequest(id, currentUser);
+    public ApiResponse<WorkflowResponse> reviewRequest(@PathVariable @NonNull Long id, Authentication authentication) {
+        WorkflowResponse workflowResponse = workflowService.reviewRequest(id);
 
         return new ApiResponse<>(
             true,
@@ -307,13 +300,9 @@ public class WorkflowController {
         summary = "Approve workflow request",
         description = "Allows authenticated users to approve a specific workflow request"
     )
-    public ApiResponse<WorkflowResponse> approveRequest(
-            @PathVariable @NonNull Long id,
-            Authentication authentication) {
+    public ApiResponse<WorkflowResponse> approveRequest(@PathVariable @NonNull Long id, Authentication authentication) {
 
-        User currentUser = getCurrentUser(authentication);
-
-        WorkflowResponse workflowResponse = workflowService.approveRequest(id, currentUser);
+        WorkflowResponse workflowResponse = workflowService.approveRequest(id);
 
         return new ApiResponse<>(
             true,
@@ -328,12 +317,8 @@ public class WorkflowController {
         summary = "Reject workflow request",
         description = "Allows authenticated users to reject a specific workflow request"
     )
-    public ApiResponse<WorkflowResponse> rejectRequest(
-            @PathVariable @NonNull Long id,
-            Authentication authentication) {
-        User currentUser = getCurrentUser(authentication);
-        
-        WorkflowResponse workflowResponse = workflowService.rejectRequest(id, currentUser);
+    public ApiResponse<WorkflowResponse> rejectRequest(@PathVariable @NonNull Long id, Authentication authentication) {
+        WorkflowResponse workflowResponse = workflowService.rejectRequest(id);
 
         return new ApiResponse<>(
             true,
@@ -353,9 +338,7 @@ public class WorkflowController {
             @PathVariable @NonNull Long id,
             @RequestParam @NonNull Long reviewerId, 
             Authentication authentication) {
-        User currentUser = getCurrentUser(authentication);
-
-        WorkflowResponse workflowResponse = workflowService.assignReviewer(id, reviewerId, currentUser);
+        WorkflowResponse workflowResponse = workflowService.assignReviewer(id, reviewerId);
 
         return new ApiResponse<>(
             true,
@@ -374,9 +357,8 @@ public class WorkflowController {
             @PathVariable @NonNull Long id,
             @RequestParam @NonNull Long approverId,
             Authentication authentication) {
-        User currentUser = getCurrentUser(authentication);
 
-        WorkflowResponse workflowResponse = workflowService.assignApprover(id, approverId, currentUser);
+        WorkflowResponse workflowResponse = workflowService.assignApprover(id, approverId);
 
         return new ApiResponse<>(
             true,
@@ -385,9 +367,4 @@ public class WorkflowController {
         );
     }
 
-    // Helpers 
-    private User getCurrentUser(Authentication authentication) {
-        return userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
-    }
 }

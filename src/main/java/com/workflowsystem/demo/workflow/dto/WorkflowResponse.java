@@ -12,7 +12,9 @@ public class WorkflowResponse {
     private WorkflowStatus status;
     private UserResponse submittedBy;
     private UserResponse reviewedBy;
+    private UserResponse assignedReviewer;
     private UserResponse approvedBy;
+    private UserResponse assignedApprover;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime reviewedAt;
@@ -31,7 +33,10 @@ public class WorkflowResponse {
             LocalDateTime createdAt,
             LocalDateTime updatedAt,
             LocalDateTime reviewedAt,
-            LocalDateTime approvedAt) {
+            LocalDateTime approvedAt,
+            UserResponse assignedReviewer,
+            UserResponse assignedApprover
+        ) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -43,6 +48,8 @@ public class WorkflowResponse {
         this.updatedAt = updatedAt;
         this.reviewedAt = reviewedAt;
         this.approvedAt = approvedAt;
+        this.assignedApprover = assignedApprover;
+        this.assignedReviewer = assignedReviewer;
     }
 
     public Long getId() {
@@ -63,6 +70,14 @@ public class WorkflowResponse {
 
     public UserResponse getSubmittedBy() {
         return submittedBy;
+    }
+
+    public UserResponse getAssignedReviewer(){
+        return assignedReviewer;
+    }
+
+    public UserResponse getAssignedApprover(){
+        return assignedApprover;
     }
 
     public UserResponse getReviewedBy() {

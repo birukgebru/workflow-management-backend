@@ -27,3 +27,6 @@ public class CurrentUserService {
                 .orElseThrow(() -> new AuthenticationException("Current user not found"));
     }
 }
+
+
+
