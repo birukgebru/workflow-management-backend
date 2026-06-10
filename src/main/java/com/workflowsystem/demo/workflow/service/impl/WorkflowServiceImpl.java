@@ -24,6 +24,7 @@ import com.workflowsystem.demo.notification.event.ReviewerAssignedEvent;
 import com.workflowsystem.demo.notification.event.WorkflowApprovedEvent;
 import com.workflowsystem.demo.notification.event.WorkflowRejectedEvent;
 import com.workflowsystem.demo.notification.event.WorkflowSubmittedEvent;
+import com.workflowsystem.demo.shared.exception.InvalidWorkflowStateException;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.workflow.dto.WorkflowDashboardResponse;
 import com.workflowsystem.demo.workflow.dto.WorkflowResponse;
@@ -176,7 +177,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflowStateMachine.validateTransition(previousStatus, WorkflowStatus.UNDER_REVIEW);
 
         if(workflowRequest.getAssignedReviewer() == null || !workflowRequest.getAssignedReviewer().getId().equals(currentUserService.getCurrentUser().getId())) {
-            throw new IllegalStateException("You are not the assigned reviewer for this request");
+            throw new InvalidWorkflowStateException("You are not the assigned reviewer for this request");
         }
 
         workflowRequest.setStatus(WorkflowStatus.UNDER_REVIEW);
@@ -214,7 +215,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflowStateMachine.validateTransition(previousStatus, WorkflowStatus.APPROVED);
 
         if(workflowRequest.getAssignedApprover() == null || !workflowRequest.getAssignedApprover().getId().equals(currentUserService.getCurrentUser().getId())) {
-            throw new IllegalStateException("You are not the assigned approver for this request");
+            throw new InvalidWorkflowStateException("You are not the assigned approver for this request");
         }
 
         workflowRequest.setStatus(WorkflowStatus.APPROVED);
@@ -256,7 +257,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         workflowStateMachine.validateTransition(previousStatus, WorkflowStatus.REJECTED);
 
         if(workflowRequest.getAssignedApprover() == null || !workflowRequest.getAssignedApprover().getId().equals(currentUserService.getCurrentUser().getId())) {
-                 throw new IllegalStateException("You are not the assigned approver for this request to reject");
+                 throw new InvalidWorkflowStateException("You are not the assigned approver for this request to reject");
         }
 
         workflowRequest.setStatus(WorkflowStatus.REJECTED);
@@ -295,7 +296,7 @@ public class WorkflowServiceImpl implements WorkflowService {
                 .anyMatch(r -> r.getName() == Role.ROLE_REVIEWER);
 
         if(!hasReviewerRole){
-            throw new IllegalArgumentException("User is not a reviewer");
+            throw new InvalidWorkflowStateException("User is not a reviewer");
         }
         workflowRequest.setAssignedReviewer(reviewer);
         WorkflowRequest savedWorkflowRequest = workflowRequestRepository.save(workflowRequest);
@@ -318,7 +319,7 @@ public class WorkflowServiceImpl implements WorkflowService {
                                           .anyMatch(r -> r.getName() == Role.ROLE_APPROVER);
 
         if(!hasApproverRole){
-            throw new IllegalArgumentException("User is not an approver");
+            throw new InvalidWorkflowStateException("User is not an approver");
         }
 
         workflowRequest.setAssignedApprover(approver);

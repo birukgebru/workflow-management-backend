@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.workflowsystem.demo.file.entity.Attachment;
 import com.workflowsystem.demo.file.repository.AttachmentRepository;
 import com.workflowsystem.demo.file.service.FileStorageService;
+import com.workflowsystem.demo.shared.exception.FileHandlingException;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.workflow.entity.WorkflowRequest;
 
@@ -52,7 +53,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             rootLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
             Files.createDirectories(rootLocation);
         } catch (IOException ex) {
-            throw new RuntimeException("Could not create upload directory", ex);
+            throw new FileHandlingException("Could not create upload directory");
         }
     }
 
@@ -69,13 +70,13 @@ public class FileStorageServiceImpl implements FileStorageService {
         Path targetLocation = rootLocation.resolve(storedFileName).normalize();
 
         if (!targetLocation.startsWith(rootLocation)) {
-            throw new IllegalArgumentException("Invalid file path");
+            throw new FileHandlingException("Invalid file path");
         }
 
         try (InputStream inputStream = file.getInputStream()) {
             Files.copy(inputStream, targetLocation, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
-            throw new RuntimeException("Could not store file " + originalFileName, ex);
+            throw new FileHandlingException("Could not store file " + originalFileName);
         }
 
         Attachment attachment = new Attachment(
@@ -94,7 +95,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         Path filePath = rootLocation.resolve(attachment.getFilePath()).normalize();
 
         if (!filePath.startsWith(rootLocation)) {
-            throw new IllegalArgumentException("Invalid file path");
+            throw new FileHandlingException("Invalid file path");
         }
 
         try {
@@ -114,7 +115,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public Attachment findById(Long attachmentId) {
         if (attachmentId == null) {
-            throw new IllegalArgumentException("Attachment id is required");
+            throw new FileHandlingException("Attachment id is required");
         }
 
         return attachmentRepository.findById(attachmentId)
@@ -123,17 +124,17 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     private void validateFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("File is required");
+            throw new FileHandlingException("File is required");
         }
 
         String fileName = cleanOriginalFileName(file);
 
         if (fileName.contains("..")) {
-            throw new IllegalArgumentException("File name contains invalid path sequence");
+            throw new FileHandlingException("File name contains invalid path sequence");
         }
 
         if (file.getSize() > maxFileSize.toBytes()) {
-            throw new IllegalArgumentException("File size must not exceed 10MB");
+            throw new FileHandlingException("File size must not exceed 10MB");
         }
 
         validateContentType(file.getContentType());
@@ -149,7 +150,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         String originalFileName = file.getOriginalFilename();
 
         if (!StringUtils.hasText(originalFileName)) {
-            throw new IllegalArgumentException("File name is required");
+            throw new FileHandlingException("File name is required");
         }
 
         return StringUtils.cleanPath(originalFileName);
@@ -157,7 +158,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     private String validateContentType(String contentType) {
         if (!StringUtils.hasText(contentType) || !ALLOWED_TYPES.contains(contentType)) {
-            throw new IllegalArgumentException("Only PDF, PNG, and JPEG files are allowed");
+            throw new FileHandlingException("Only PDF, PNG, and JPEG files are allowed");
         }
 
         return contentType;

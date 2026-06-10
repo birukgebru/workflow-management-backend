@@ -7,6 +7,7 @@ import com.workflowsystem.demo.auth.entity.User;
 import com.workflowsystem.demo.auth.enums.Role;
 import com.workflowsystem.demo.auth.repository.UserRepository;
 import com.workflowsystem.demo.auth.service.UserService;
+import com.workflowsystem.demo.shared.exception.InvalidAccountManagementException;
 import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.shared.response.ApiResponse;
 
@@ -99,14 +100,14 @@ public class AdminController {
 
         User currentUser = getCurrentUser(authentication);
         if (currentUser.getId().equals(id)) {
-            throw new IllegalStateException("You cannot disable your own account");
+            throw new InvalidAccountManagementException("You cannot disable your own account");
         }
 
         long adminCount = userRepository.countByRoles_Name(Role.ROLE_ADMIN);
         boolean userIsAdmin = user.getRoles().stream()
                 .anyMatch(role -> role.getName() == Role.ROLE_ADMIN);
         if (userIsAdmin && adminCount <= 1) {
-            throw new IllegalStateException("Cannot disable last admin");
+            throw new InvalidAccountManagementException("Cannot disable last admin");
         }
  
 
