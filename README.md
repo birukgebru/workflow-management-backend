@@ -6,28 +6,28 @@ This project follows a modular monolith architecture. It exposes documented REST
 ## FEATURES
 
 ### Authentication & Security
-```
+```text
 JWT Access Token Authentication  *  Refresh Token Flow  *  Logout & Token Revocation  *  Password Reset Workflow  *  BCrypt Password Hashing  *  Stateless Security  *  Global Exception Handling  *  Request Validation
 ```
 ### Authorization (RBAC)
-```
+```text
 Role-Based Access Control (Admin, Requester, Reviewer, Approver)  *  Method-Level Security
 ```
 ### Workflow Management
-```
+```text
 Submit Workflow Requests *  Assign Reviewers  *  Assign Approvers  *  Review Requests  *  Approve Requests  *  Reject Requests  *  Workflow State Validation  *  Workflow Status Tracking 
 ```
 ### Audit & Monitoring
-```
+```text
 Workflow History Tracking  *  Audit Logging  *  Action Traceability  *  Spring Boot Actuator  *  Application Health Monitoring *  Application Metrics
 ```
 ### Search & Data Access
-```
+```text
 Pagination  *  Sorting  *  Status Filtering  *  Workflow Search  *  User-Specific Request Views
 ```
 
 ### API & Documentation
-```
+```text
 RESTful API Design  *  OpenAPI / Swagger Documentation  *  Standardized API Responses
 ```
 
