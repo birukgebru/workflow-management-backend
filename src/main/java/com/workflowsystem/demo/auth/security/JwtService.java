@@ -1,12 +1,14 @@
 package com.workflowsystem.demo.auth.security;
 
-import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.workflowsystem.demo.auth.entity.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -21,9 +23,17 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private Long expirationTime;
 
-    public String generateToken(String email) {
+    public String generateToken(User user) {
         return Jwts.builder()
-                .subject(email)
+                .subject(user.getEmail())
+                .claim("tokenVersion", user.getTokenVersion())
+                .claim(
+                    "roles",
+                    user.getRoles()
+                        .stream()
+                        .map(role -> role.getName().name())
+                        .toList()
+                )
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getSigningKey())
@@ -34,11 +44,32 @@ public class JwtService {
         return extractClaims(token).getSubject();
     }
 
+    public List<String> extractRoles(String token) {
+        Object roles = extractClaims(token).get("roles");
+        if (!(roles instanceof List<?> roleList)) {
+            return List.of();
+        }
+
+        return roleList.stream()
+                .map(String.class::cast)
+                .toList();
+    }
+
     public boolean isTokenValid(String token) {
         try {
             extractClaims(token);
 
             return true;    
+        }   catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isTokenValid(String token, int tokenVersion) {
+        try {
+            Claims claims = extractClaims(token);
+
+            return claims.get("tokenVersion", Integer.class) == tokenVersion;
         }   catch (Exception e) {
             return false;
         }

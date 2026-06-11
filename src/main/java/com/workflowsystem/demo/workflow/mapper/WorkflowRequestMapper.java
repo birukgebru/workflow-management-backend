@@ -26,7 +26,9 @@ public final class WorkflowRequestMapper {
             workflowRequest.getCreatedAt(),
             workflowRequest.getUpdatedAt(),
             workflowRequest.getReviewedAt(),
-            workflowRequest.getApprovedAt()
+            workflowRequest.getApprovedAt(),
+            toUserResponse(workflowRequest.getAssignedReviewer()),
+            toUserResponse(workflowRequest.getAssignedApprover())
         );
     }
 

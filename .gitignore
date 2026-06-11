@@ -36,5 +36,8 @@ build/
 
 ### temp files ###
 note.md
+src/main/resources/application-dev.yml
+uploads 
+
 
 

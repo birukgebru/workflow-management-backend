@@ -53,6 +53,14 @@ public class WorkflowRequest {
     @Column(name = "rejected_at")
     private LocalDateTime rejectedAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_reviewer_id")
+    private User assignedReviewer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_approver_id")
+    private User assignedApprover;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -166,6 +174,22 @@ public class WorkflowRequest {
 
     public void setRejectedAt(LocalDateTime rejectedAt) {
         this.rejectedAt = rejectedAt;
+    }
+
+    public User getAssignedReviewer() {
+        return assignedReviewer;
+    }
+
+    public void setAssignedReviewer(User assignedReviewer) {
+        this.assignedReviewer = assignedReviewer;
+    }
+
+    public User getAssignedApprover() {
+        return assignedApprover;
+    }
+
+    public void setAssignedApprover(User assignedApprover) {
+        this.assignedApprover = assignedApprover;
     }
 
 }

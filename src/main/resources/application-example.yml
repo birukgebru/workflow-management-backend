@@ -1,11 +1,16 @@
-server:
-  port: 8080
+info:
+  app:
+    name: Workflow System
+    version: 1.0.0
+    description: Enterprise Workflow Management System
 
+server:
+    port: 8080
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/workflow_db
-    username: your_username
-    password: your_password
+    username: your_postgres_db_name
+    password: your_postgres_db_password
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -21,8 +26,27 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 jwt:
-  secret: your_secure_jwt_secret
-  expiration: 86400000
+  secret: mylogestsecretkeyforenterpriseworkflowmanagement222242
+  expiration: 900000
 
 refresh-token:
-  expiration: 604800
+  expiration: 604800000 
+
+management:
+  endpoints:
+    web: 
+      exposure: 
+        include: health,info,metrics,loggers
+  endpoint:
+    health: 
+      show-details: always 
+
+logging: 
+  level: 
+    root: INFO
+    com.workflowsystem.demo: DEBUG
+  pattern: 
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+  file:
+    name: logs/workflow.log
+    

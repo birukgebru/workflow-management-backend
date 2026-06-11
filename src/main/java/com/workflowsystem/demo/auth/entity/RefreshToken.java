@@ -15,13 +15,35 @@ public class RefreshToken {
     @Column(nullable = false, unique = true)
     private String token;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     private LocalDateTime expiryDate;
 
+    private Boolean revoked = false;
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public Boolean isRevoked() {
+        return revoked;
+    }
+
+    public void setRevoked(Boolean revoked) {
+        this.revoked = revoked;
+    }
+
+
     public RefreshToken() {}
+    public RefreshToken(String token, User user, LocalDateTime expiryDate) {
+        this.token = token;
+        this.user = user;
+        this.expiryDate = expiryDate;
+    }
 
     public Long getId() {
         return id;
@@ -49,6 +71,10 @@ public class RefreshToken {
 
     public void setExpiryDate(LocalDateTime expiryDate) {
         this.expiryDate = expiryDate;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
     
 }
