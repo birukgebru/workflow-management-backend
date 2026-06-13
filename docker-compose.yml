@@ -1,0 +1,30 @@
+services:
+
+  postgres:
+    image: postgres:17
+    container_name: workflow-postgres
+
+    environment:
+      POSTGRES_DB: workflowdb
+      POSTGRES_USER: workflowuser
+      POSTGRES_PASSWORD: workflowpass
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+
+    container_name: workflow-backend
+
+    depends_on:
+      - postgres
+
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
