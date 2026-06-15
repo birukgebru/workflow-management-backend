@@ -2,11 +2,10 @@ server:
     port: 8080
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
@@ -25,7 +24,7 @@ spring:
       max-request-size: 10485760
       
 jwt:
-  secret: ${JWT_SECRET}
+  secret: mylogestsecretkeyforenterpriseworkflowmanagement222242
   expiration: 900000
 
 refresh-token:
