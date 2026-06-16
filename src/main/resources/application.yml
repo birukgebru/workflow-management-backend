@@ -4,6 +4,3 @@ info:
     version: 1.0.0
     description: Enterprise Workflow Management System
     
-spring: 
-  profiles:
-    active: prod
