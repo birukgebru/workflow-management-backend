@@ -40,3 +40,6 @@ uploads
 
 
 .env
+
+*.logs
+.vscode/

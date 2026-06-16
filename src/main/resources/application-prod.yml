@@ -9,9 +9,9 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
 
-    show-sql: true
+    show-sql: false
 
     properties:
       hibernate:
@@ -24,11 +24,11 @@ spring:
       max-request-size: 10485760
       
 jwt:
-  secret: mylogestsecretkeyforenterpriseworkflowmanagement222242
-  expiration: 900000
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
 
 refresh-token:
-  expiration: 604800000 
+  expiration: ${JWT_REFRESH_EXPIRATION} 
 
 management:
   endpoints:

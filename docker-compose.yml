@@ -6,8 +6,8 @@ services:
 
     environment:
       POSTGRES_DB: workflowdb
-      POSTGRES_USER: workflowuser
-      POSTGRES_PASSWORD: workflowpass
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
 
     ports:
       - "5433:5432"
@@ -25,8 +25,8 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRATION: 86400000
-      JWT_REFRESH_EXPIRATION: 604800000
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+      JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION}
 
     depends_on:
       - postgres
