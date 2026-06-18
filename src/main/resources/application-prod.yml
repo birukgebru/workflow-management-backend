@@ -2,27 +2,22 @@ server:
   port: ${PORT:8080}
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://postgres.railway.internal:5432/railway}
-    username: ${DB_USERNAME:postgres}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
       connection-timeout: 30000
-      idle-timeout: 600000
-      max-lifetime: 1800000
 
   jpa:
     hibernate:
-      ddl-auto: update  # Change from validate to update for first deployment
+      ddl-auto: update  # Change to update for first deployment
     show-sql: false
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        jdbc:
-          lob:
-            non_contextual_creation: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     
   servlet: 
@@ -32,9 +27,8 @@ spring:
       
 jwt:
   secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION:900000}
-  refresh:
-    expiration: ${JWT_REFRESH_EXPIRATION:604800000}
+  expiration: ${JWT_EXPIRATION}
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION}  # ← Changed from refresh-token.expiration
 
 management:
   endpoints:
@@ -49,7 +43,10 @@ logging:
   level: 
     root: INFO
     com.workflowsystem.demo: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
   pattern: 
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+  file:
+    name: logs/workflow.log
+
+file: 
+  upload-dir: uploads
