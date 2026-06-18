@@ -175,7 +175,7 @@ GET /actuator/loggers
 ## API DOCUMENTATION
 
 ```text
-http://localhost:8080/swagger-ui/index.html
+http://your-app-url/swagger-ui/index.html
 ```
 
 ### Swagger-ui
