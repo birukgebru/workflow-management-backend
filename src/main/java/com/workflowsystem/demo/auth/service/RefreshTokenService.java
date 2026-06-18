@@ -18,7 +18,7 @@ import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 @Service
 public class RefreshTokenService {
     
-    @Value("${jwt.refresh-token.expiration}")
+    @Value("${jwt.refresh-expiration}") 
     private long refreshTokenDuration;
 
     private final RefreshTokenRepository refreshTokenRepository;
