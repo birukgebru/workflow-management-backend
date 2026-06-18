@@ -1,14 +1,16 @@
-# Multi-stage build
 FROM eclipse-temurin:17-jdk AS build
 
 WORKDIR /app
 
-# Copy Maven/Gradle files
+# Copy Maven wrapper files first
 COPY mvnw .
 COPY .mvn .mvn
-COPY pom.xml .
 
-# Download dependencies
+# Fix: Make mvnw executable
+RUN chmod +x mvnw
+
+# Copy pom.xml and download dependencies
+COPY pom.xml .
 RUN ./mvnw dependency:go-offline -B
 
 # Copy source code
