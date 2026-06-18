@@ -1,5 +1,10 @@
 server:
   port: ${PORT:8080}
+  forward-headers-strategy: framework
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
+    port-header: x-forwarded-port
 spring:
   datasource:
     url: ${DB_URL}
@@ -42,6 +47,10 @@ springdoc:
     try-it-out-enabled: true
     filter: true
     display-request-duration: true
+    config-url: /v3/api-docs/swagger-config
+    url: /v3/api-docs
+    use-root-path: true
+  show-actuator: true
 
 management:
   endpoints:
