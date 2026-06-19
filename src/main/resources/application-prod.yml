@@ -77,3 +77,6 @@ logging:
 
 file: 
   upload-dir: uploads
+
+app:
+  seed-data: false
