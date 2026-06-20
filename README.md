@@ -1,3 +1,4 @@
+![Build Status](badge-url-here) 
 # Enterprise Workflow Management System
 An Enterprise Workflow Management System is an API built with Spring Boot framework. The system manages the complete lifecycle of workflow requests processes (submission -> review -> approval/rejection).
 It demonstrates enterprise backend engineering practices. These practices including JWT authentication, refresh token management, role-based access control (RBAC), workflow state management, audit logging, monitoring, validation, pagination, filtering, and search capabilities.

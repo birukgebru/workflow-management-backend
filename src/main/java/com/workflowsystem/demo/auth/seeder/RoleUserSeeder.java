@@ -53,7 +53,6 @@ public class RoleUserSeeder implements CommandLineRunner {
         user.setRoles(Set.of(role));
 
         userRepository.save(user);
-
-        String x = ;
+    
     }
 }
