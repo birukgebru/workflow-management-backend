@@ -36,4 +36,4 @@ jobs:
             maven-${{ runner.os }}
 
       - name: Build Project
-        run: mvn clean verify
+        run: mvn -B clean verify
