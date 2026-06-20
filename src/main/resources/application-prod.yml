@@ -5,6 +5,9 @@ server:
     remote-ip-header: x-forwarded-for
     protocol-header: x-forwarded-proto
     port-header: x-forwarded-port
+  servlet:
+    context-path: /api
+
 spring:
   datasource:
     url: ${DB_URL}
@@ -52,10 +55,9 @@ springdoc:
     try-it-out-enabled: true
     filter: true
     display-request-duration: true
-    config-url: /v3/api-docs/swagger-config
-    url: /v3/api-docs
     use-root-path: true
   show-actuator: true
+
 
 management:
   endpoints:
@@ -80,3 +82,4 @@ file:
 
 app:
   seed-data: false
+

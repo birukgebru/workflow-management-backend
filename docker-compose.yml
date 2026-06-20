@@ -33,6 +33,19 @@ services:
 
     ports:
       - "8080:8080"
+  
+  nginx: 
+    image: nginx:latest
+    container_name: workflow-nginx
+
+    ports:
+      - "80:80"
+
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
