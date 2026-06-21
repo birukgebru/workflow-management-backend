@@ -2,29 +2,22 @@ FROM eclipse-temurin:17-jdk AS build
 
 WORKDIR /app
 
-# Copy Maven wrapper files first
 COPY mvnw .
 COPY .mvn .mvn
 
-# Fix: Make mvnw executable
 RUN chmod +x mvnw
 
-# Copy pom.xml and download dependencies
 COPY pom.xml .
 RUN ./mvnw dependency:go-offline -B
 
-# Copy source code
 COPY src src
 
-# Build the application
 RUN ./mvnw package -DskipTests
 
-# Runtime stage
 FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
-# Copy the built jar from build stage
 COPY --from=build /app/target/*.jar app.jar
 
 ENV PORT=8080
