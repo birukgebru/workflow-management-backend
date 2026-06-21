@@ -228,7 +228,9 @@ The application is containerized using Docker.
 - Update database credentials and JWT secret 
 
 ### Run Application 
-- mvn spring-boot:run
+```
+ mvn spring-boot:run
+```
 
 ### Base URL
 
