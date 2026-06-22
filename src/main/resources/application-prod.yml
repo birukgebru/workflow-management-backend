@@ -10,9 +10,9 @@ server:
 
 spring:
   datasource:
-    url: your-db-url
-    username: your-db-nam
-    password: your-pass
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -39,9 +39,9 @@ spring:
       max-request-size: 10485760
       
 jwt:
-  secret: your-logn-jwt-secreate
-  expiration: add-time-here
-  refresh-expiration: add-time-here
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION}
 
 springdoc:
   api-docs:
@@ -84,5 +84,5 @@ file:
   upload-dir: uploads
 
 app:
-  seed-data: true
+  seed-data: false
 
