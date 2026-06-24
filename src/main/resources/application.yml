@@ -1,3 +1,9 @@
-spring: 
+info:
+  app:
+    name: Workflow System
+    version: 1.0.0
+    description: Enterprise Workflow Management System
+    
+spring:
   profiles:
-    active: dev
+    active: prod

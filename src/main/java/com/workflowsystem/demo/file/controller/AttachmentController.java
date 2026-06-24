@@ -10,11 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriUtils;
-<<<<<<< HEAD
-
-import com.workflowsystem.demo.file.dto.AttachmentRequest;
-=======
->>>>>>> staging/main
 import com.workflowsystem.demo.file.dto.AttachmentResponse;
 import com.workflowsystem.demo.file.entity.Attachment;
 import com.workflowsystem.demo.file.repository.AttachmentRepository;
@@ -23,33 +18,20 @@ import com.workflowsystem.demo.shared.exception.ResourceNotFoundException;
 import com.workflowsystem.demo.shared.response.ApiResponse;
 import com.workflowsystem.demo.workflow.entity.WorkflowRequest;
 import com.workflowsystem.demo.workflow.repository.WorkflowRequestRepository;
-<<<<<<< HEAD
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.lang.NonNull;
-
-import java.nio.charset.StandardCharsets;
-
-=======
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.lang.NonNull;
 import java.nio.charset.StandardCharsets;
->>>>>>> staging/main
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/workflow")
 @SecurityRequirement(name = "bearerAuth")
-<<<<<<< HEAD
-=======
 @Tag(
     name = "Workflow Attachments Management",
     description = "Endpoints for managing workflow attachments"
 )
->>>>>>> staging/main
 public class AttachmentController {
 
     private final FileStorageService fileStorageService;
@@ -95,64 +77,6 @@ public class AttachmentController {
         );
     }
 
-<<<<<<< HEAD
-    // @GetMapping("/attachments/{attachmentId}")
-    // @PreAuthorize("isAuthenticated()")
-    // @Operation(
-    //     summary = "Download attachment",
-    //     description = "Download an attachment by id"
-    // )
-    // public ResponseEntity<Resource> downloadAttachment(
-    //         @PathVariable Long attachmentId) {
-
-    //     Attachment attachment = fileStorageService.findById(attachmentId);
-
-    //     Resource resource = fileStorageService.load(attachmentId);
-
-    //     return ResponseEntity.ok()
-    //             .contentType(MediaType.parseMediaType(attachment.getContentType()))
-    //             .header(
-    //                     HttpHeaders.CONTENT_DISPOSITION, "attachment; 
-    //                     filename=\"" + UriUtils.encode(
-    //                                     attachment.getFileName(),
-    //                                     StandardCharsets.UTF_8
-    //                             ) + "\""
-    //             )
-    //             .body(resource);
-    // }
-
-    // @GetMapping("/{workflowId}/attachments")
-    // @PreAuthorize("isAuthenticated()")
-    // @Operation(
-    //     summary = "List workflow attachments",
-    //     description = "Get all attachments for a workflow request"
-    // )
-    // public ApiResponse<List<AttachmentResponse>> getAttachments(@PathVariable Long workflowId) {
-
-    //     WorkflowRequest workflowRequest = workflowRequestRepository.findById(workflowId)
-    //                     .orElseThrow(() -> new ResourceNotFoundException("Workflow request not found"));
-
-    //     List<AttachmentResponse> attachments = attachmentRepository
-    //                     .findByWorkflowRequestId(workflowRequest.getId())
-    //                     .stream()
-    //                     .map(attachment -> {
-    //                         String downloadUrl = ServletUriComponentsBuilder
-    //                                         .fromCurrentContextPath()
-    //                                         .path("/workflow/attachments/")
-    //                                         .path(attachment.getId().toString())
-    //                                         .toUriString();
-
-    //                         return AttachmentResponse.fromAttachment(attachment, downloadUrl);
-    //                     })
-    //                     .toList();
-
-    //     return new ApiResponse<>(
-    //             true,
-    //             "Attachments retrieved successfully",
-    //             attachments
-    //     );
-    // }
-=======
     @GetMapping("/attachments/{attachmentId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(
@@ -207,5 +131,4 @@ public class AttachmentController {
                 attachments
         );
     }
->>>>>>> staging/main
 }
