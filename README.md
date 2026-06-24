@@ -164,7 +164,7 @@ The application follows modular monolith architecture (auth, workflow, audit, fi
 ## API DOCUMENTATION
 
 ```text
-http://your-app-url/swagger-ui/index.html
+http://your-app-url/api/swagger-ui/index.html
 ```
 
 ### Swagger-ui
