@@ -1,6 +1,11 @@
 # Enterprise Workflow Management System
 ![Build Status](https://github.com/birukgebru/workflow-system-dev/actions/workflows/build.yml/badge.svg) 
-## OVERVIEW
+![Java](https://img.shields.io/badge/Java-17-blue)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-green)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue)
+![Docker](https://img.shields.io/badge/Docker-Enabled-blue) 
+
+## OVERVIEW 
 An Enterprise Workflow Management System is an API built with Spring Boot. The system manages the complete lifecycle of workflow requests processes (submission -> review -> approval/rejection).
 It demonstrates enterprise backend engineering practices. These include JWT authentication, refresh token management, role-based access control (RBAC), workflow state management, audit logging, monitoring, validation. Related to data access the system supports pagination, filtering, and search capabilities. PostgresSQL databased integrated, supports async notification and docker deployment. 
 This project follows a modular monolith architecture. It exposes documented REST API using OpenAPI/Swagger.
