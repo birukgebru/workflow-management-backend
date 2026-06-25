@@ -1,16 +1,18 @@
 # Enterprise Workflow Management System
 ![Build Status](https://github.com/birukgebru/workflow-system-dev/actions/workflows/build.yml/badge.svg) 
-## OVERVIEW
+![Java](https://img.shields.io/badge/Java-17-blue)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-green)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue)
+![Docker](https://img.shields.io/badge/Docker-Enabled-blue) 
+
+## OVERVIEW 
 An Enterprise Workflow Management System is an API built with Spring Boot. The system manages the complete lifecycle of workflow requests processes (submission -> review -> approval/rejection).
 It demonstrates enterprise backend engineering practices. These include JWT authentication, refresh token management, role-based access control (RBAC), workflow state management, audit logging, monitoring, validation. Related to data access the system supports pagination, filtering, and search capabilities. PostgresSQL databased integrated, supports async notification and docker deployment. 
 This project follows a modular monolith architecture. It exposes documented REST API using OpenAPI/Swagger.
 
 ## BUSINESS PROBLEM
 
-Organizations often manage approval workflows manually through email, spreadsheets, or paper-based processes.
-
-This system digitizes workflow management by providing:
-
+Organizations often manage approval workflows manually through email, spreadsheets, or paper-based processes. This system digitizes workflow management by providing: 
 - Structured approval chains
 - Role-based access control
 - Workflow traceability
@@ -173,6 +175,7 @@ http://your-app-url/api/swagger-ui/index.html
 ### Authorization
 ![Authorization](docs/images/swagger-ui-authorization.png)
 
+
 ## MONITORING
 
 The application exposes operational endpoints using Spring Boot Actuator.
@@ -227,7 +230,44 @@ The application is containerized using Docker.
 
 ### Base URL
 
+
+## DEPLOYMENT
+
+The application is containerized using Docker.
+
+**Components:** [Spring Boot API] [PostgreSQL] [NGINX Reverse Proxy]
+
+**Deployment Features:** Environment Variables, Docker Compose, Health Monitoring, Logging
+
+## LOCAL DEVELOPMENT
+
+### Requirements
+- Java 17+
+- PostgreSQL
+- Maven
+
+### Clone Repository
+
+1. git clone https://github.com/birukgebru/workflow-management-backend.git
+
+2. cd workflow-management-backend.git
+
+### Configure
+- Copy **application-example.yml** to **application-dev.yml**
+- Update database credentials and JWT secret 
+
+### Run Application 
+```
+ mvn spring-boot:run
+```
+
+### Base URL
+
 ```text
+http://localhost:8080
+```
+### Swagger
+```
 http://localhost:8080
 ```
 ### Swagger
@@ -235,6 +275,52 @@ http://localhost:8080
 http://localhost:8080/swagger-ui/index.html
 ```
 
+## DOCKER DEPLOYMENT
+
+### Start Services
+```
+docker compose up -d
+```
+
+### Stop Services
+```
+docker compose down
+```
+
+### Services
+![Docker Compose Stack](docs/images/docker-workflow.png)
+
+- workflow-backend
+- workflow-postgres
+- workflow-nginx
+
+## ENVIRONMENT VARIABLES (.env)
+```
+DB_URL=
+DB_USERNAME=
+DB_PASSWORD=
+
+JWT_SECRET=
+JWT_EXPIRATION=
+JWT_REFRESH_EXPIRATION=
+```
+## DEMO USERS
+Seed file is included to add default roles and demo users for demo. 
+
+Password for all users: Pass123
+```
+ADMIN
+admin@workflow.local
+
+REQUESTER
+requester@workflow.local
+
+REVIEWER
+reviewer@workflow.local
+
+APPROVER
+approver@workflow.local
+```
 ## DOCKER DEPLOYMENT
 
 ### Start Services
@@ -307,6 +393,10 @@ approver@workflow.local
 - REST API Design
 - Monitoring with Actuator
 - Modular Monolith Architecture
+- Docker Containerization
+- Docker Compose Orchestration
+- NGINX Reverse Proxy
+- CI/CD with GitHub Actions
 - Docker Containerization
 - Docker Compose Orchestration
 - NGINX Reverse Proxy
