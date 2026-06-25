@@ -153,13 +153,7 @@ The application follows modular monolith architecture (auth, workflow, audit, fi
 ```
 
 ## AUTHENTICATION FLOW
-1. User registers account
-2. User logs in
-3. JWT access token issued
-4. Refresh token stored securely
-5. Protected endpoints require Bearer token
-6. Role-based access enforced
-
+![Authentication flow](docs/images/authentication-flow.png)
 
 ## API DOCUMENTATION
 
