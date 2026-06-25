@@ -173,7 +173,6 @@ http://your-app-url/api/swagger-ui/index.html
 ### Authorization
 ![Authorization](docs/images/swagger-ui-authorization.png)
 
-
 ## MONITORING
 
 The application exposes operational endpoints using Spring Boot Actuator.
