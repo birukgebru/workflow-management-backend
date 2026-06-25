@@ -12,10 +12,7 @@ This project follows a modular monolith architecture. It exposes documented REST
 
 ## BUSINESS PROBLEM
 
-Organizations often manage approval workflows manually through email, spreadsheets, or paper-based processes.
-
-This system digitizes workflow management by providing:
-
+Organizations often manage approval workflows manually through email, spreadsheets, or paper-based processes. This system digitizes workflow management by providing: 
 - Structured approval chains
 - Role-based access control
 - Workflow traceability
@@ -158,13 +155,7 @@ The application follows modular monolith architecture (auth, workflow, audit, fi
 ```
 
 ## AUTHENTICATION FLOW
-1. User registers account
-2. User logs in
-3. JWT access token issued
-4. Refresh token stored securely
-5. Protected endpoints require Bearer token
-6. Role-based access enforced
-
+![Authentication-Flow](docs/images/authentication-flow.png)
 
 ## API DOCUMENTATION
 
