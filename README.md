@@ -155,7 +155,7 @@ The application follows modular monolith architecture (auth, workflow, audit, fi
 ```
 
 ## AUTHENTICATION FLOW
-![Authentication-Flow](docs/images/authentication-flow.png)
+![Authentication flow](docs/images/authentication-flow.png)
 
 ## API DOCUMENTATION
 
@@ -230,7 +230,44 @@ The application is containerized using Docker.
 
 ### Base URL
 
+
+## DEPLOYMENT
+
+The application is containerized using Docker.
+
+**Components:** [Spring Boot API] [PostgreSQL] [NGINX Reverse Proxy]
+
+**Deployment Features:** Environment Variables, Docker Compose, Health Monitoring, Logging
+
+## LOCAL DEVELOPMENT
+
+### Requirements
+- Java 17+
+- PostgreSQL
+- Maven
+
+### Clone Repository
+
+1. git clone https://github.com/birukgebru/workflow-management-backend.git
+
+2. cd workflow-management-backend.git
+
+### Configure
+- Copy **application-example.yml** to **application-dev.yml**
+- Update database credentials and JWT secret 
+
+### Run Application 
+```
+ mvn spring-boot:run
+```
+
+### Base URL
+
 ```text
+http://localhost:8080
+```
+### Swagger
+```
 http://localhost:8080
 ```
 ### Swagger
@@ -238,6 +275,52 @@ http://localhost:8080
 http://localhost:8080/swagger-ui/index.html
 ```
 
+## DOCKER DEPLOYMENT
+
+### Start Services
+```
+docker compose up -d
+```
+
+### Stop Services
+```
+docker compose down
+```
+
+### Services
+![Docker Compose Stack](docs/images/docker-workflow.png)
+
+- workflow-backend
+- workflow-postgres
+- workflow-nginx
+
+## ENVIRONMENT VARIABLES (.env)
+```
+DB_URL=
+DB_USERNAME=
+DB_PASSWORD=
+
+JWT_SECRET=
+JWT_EXPIRATION=
+JWT_REFRESH_EXPIRATION=
+```
+## DEMO USERS
+Seed file is included to add default roles and demo users for demo. 
+
+Password for all users: Pass123
+```
+ADMIN
+admin@workflow.local
+
+REQUESTER
+requester@workflow.local
+
+REVIEWER
+reviewer@workflow.local
+
+APPROVER
+approver@workflow.local
+```
 ## DOCKER DEPLOYMENT
 
 ### Start Services
@@ -310,6 +393,10 @@ approver@workflow.local
 - REST API Design
 - Monitoring with Actuator
 - Modular Monolith Architecture
+- Docker Containerization
+- Docker Compose Orchestration
+- NGINX Reverse Proxy
+- CI/CD with GitHub Actions
 - Docker Containerization
 - Docker Compose Orchestration
 - NGINX Reverse Proxy
